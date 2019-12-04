@@ -1,0 +1,31 @@
+.App {
+    background-color: #3c3c3c;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+}
+
+.content-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid darkgray;
+    border-top: 0;
+    background-color: #333333;
+}
+
+.container-horizontal {
+    display: flex;
+    flex-direction: row;
+}
+
+.row-up {
+    flex-grow: 0;
+    border-bottom: 2px solid darkgray;
+    min-height: 700px;
+}
+
+.row-down {
+    flex-grow: 1;
+}

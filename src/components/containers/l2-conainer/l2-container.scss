@@ -1,0 +1,56 @@
+$main-color: #999999;
+$background-color: #333333;
+
+.container-l2 {
+  display: flex;
+  flex-direction: column;
+  border-right: 2px solid darkgray;
+}
+
+.container-l2 select {
+  background-color: $background-color;
+  color: $main-color;
+  border: none;
+  padding: 1px 3px;
+  outline: none;
+  overflow-y: hidden;
+}
+
+.container-l2 table {
+  border-collapse: collapse;
+  color: $main-color;
+}
+
+.container-l2 table thead th {
+  border-top: 1px solid gray;
+  border-bottom: 1px solid gray;
+  font-weight: normal;
+}
+
+.container-l2 table thead th, td {
+  padding: 2px 15px;
+  text-align: right;
+}
+
+.container-l2 .left {
+  text-align: left;
+  border-right: 1px solid gray;
+}
+
+.container-l2 .right {
+  text-align: right;
+}
+
+.container-l2 .ask {
+  color: firebrick;
+}
+
+.container-l2 .bid {
+  color: darkgreen;
+}
+
+.container-l2 .spread {
+  color: $main-color;
+  border-top: 1px solid gray;
+  border-bottom: 1px solid gray;
+}

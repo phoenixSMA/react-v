@@ -1,0 +1,14 @@
+$main-color: #999999;
+$background-color: #333333;
+
+.center-container {
+  display: flex;
+  flex-direction: column;
+  border-right: 2px solid darkgray;
+}
+
+.center-container table {
+  border-collapse: collapse;
+  color: $main-color;
+}
+
