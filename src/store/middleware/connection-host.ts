@@ -3,7 +3,8 @@ import { Dispatch, Middleware, MiddlewareAPI } from "redux";
 import {
 	setConnectionStatus,
 	setSymbol1CL,
-	setSymbol1Websocket, setSymbol2CL,
+	setSymbol1Websocket,
+	setSymbol2CL,
 	setSymbol2Websocket,
 	updateSymbol1CL,
 	updateSymbol1L2,
@@ -28,46 +29,33 @@ const connectionHostMiddleware: Middleware = ({getState, dispatch}: MiddlewareAP
 
 		const statusHandler: WebsocketStatusHandler = (exchange, status, error) => {
 			state = getState();
-			const {symbol1, symbol2} = state;
+			const {symbol1, symbol2, chart: {period}} = state;
 			if (status === WebsocketStatus.Opened) {
+				for (const symbol of [symbol1, symbol2]) {
+					if (exchange === symbol.exchange) {
+						const contract = symbol.name.split(`:`)[1];
+						symbol.websocket!.subscribe({
+							sub: WebsocketSubscription.MarketDepth,
+							contract,
+							type: `step6`,
+							handler: streamHandler,
+						});
+						symbol.websocket!.request({
+							req: WebsocketRequest.CloseLine,
+							contract,
+							period,
+							handler: requestHandler,
+						});
+						symbol.websocket!.subscribe({
+							sub: WebsocketSubscription.CloseLine,
+							contract,
+							period,
+							handler: streamHandler,
+						});
+					}
+				}
 				if (symbol1.websocket!.status === WebsocketStatus.Opened && symbol2.websocket!.status === WebsocketStatus.Opened) {
 					next(setConnectionStatus(ConnectionStatus.Connected));
-					if (exchange === symbol1.exchange) {
-						symbol1.websocket!.subscribe({
-							sub: WebsocketSubscription.MarketDepth,
-							contract: symbol1.name.split(`:`)[1],
-							type: `step6`,
-							handler: streamHandler,
-						});
-						symbol1.websocket!.request({
-							req: WebsocketRequest.CloseLine,
-							contract: symbol1.name.split(`:`)[1],
-							handler: requestHandler,
-						});
-						symbol1.websocket!.subscribe({
-							sub: WebsocketSubscription.CloseLine,
-							contract: symbol1.name.split(`:`)[1],
-							handler: streamHandler,
-						});
-					}
-					if (exchange === symbol2.exchange) {
-						symbol2.websocket!.subscribe({
-							sub: WebsocketSubscription.MarketDepth,
-							contract: symbol2.name.split(`:`)[1],
-							type: `step6`,
-							handler: streamHandler,
-						});
-						symbol2.websocket!.request({
-							req: WebsocketRequest.CloseLine,
-							contract: symbol2.name.split(`:`)[1],
-							handler: requestHandler,
-						});
-						symbol2.websocket!.subscribe({
-							sub: WebsocketSubscription.CloseLine,
-							contract: symbol2.name.split(`:`)[1],
-							handler: streamHandler,
-						});
-					}
 				}
 			} else {
 				if (error) {

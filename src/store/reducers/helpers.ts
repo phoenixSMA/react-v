@@ -1,4 +1,4 @@
-import { CloseLineData, CloseLinePoint, ConnectionStatus, IContract, IState, ISymbol } from "../types";
+import { ChartPeriods, CloseLineData, CloseLinePoint, ConnectionStatus, IContract, IState, ISymbol } from "../types";
 import { contracts } from "../../service/constants";
 
 export const getCloseLine = (line: CloseLineData, point: CloseLinePoint) => {
@@ -33,9 +33,15 @@ const emptySymbol: ISymbol = {
 export const initialState = (): IState => {
 	const contract1: IContract = contracts.find(({name}) => name === localStorage.getItem(`symbol1`)) || contracts[0];
 	const contract2: IContract = contracts.find(({name}) => name === localStorage.getItem(`symbol2`)) || contracts[0];
+	const period: ChartPeriods = localStorage.getItem(`period`) as ChartPeriods || `M1`;
+	const price: boolean = JSON.parse(localStorage.getItem(`price`) || `true`);
 	return {
 		symbol1: Object.assign({}, emptySymbol, contract1),
 		symbol2: Object.assign({}, emptySymbol, contract2),
 		connectionStatus: ConnectionStatus.Disconnected,
+		chart: {
+			period,
+			price
+		}
 	}
 };

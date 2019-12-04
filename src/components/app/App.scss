@@ -20,6 +20,11 @@
     flex-direction: row;
 }
 
+.container-vertical {
+    display: flex;
+    flex-direction: row;
+}
+
 .row-up {
     flex-grow: 0;
     border-bottom: 2px solid darkgray;
@@ -27,5 +32,9 @@
 }
 
 .row-down {
+    flex-grow: 1;
+}
+
+.chartview {
     flex-grow: 1;
 }

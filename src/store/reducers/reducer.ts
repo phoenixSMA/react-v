@@ -35,6 +35,8 @@ const reducer = (
 				let closeLine: CloseLineData = getCloseLine(state.symbol2.closeLine, action.payload);
 				return {...state, symbol2: {...state.symbol2, closeLine}}
 			}
+			case Actions.SET_CHART_PERIOD:
+				return {...state, chart: {...state.chart, period: action.payload}};
 			case Actions.WEBSOCKET_OPENED:
 			case Actions.WEBSOCKET_CLOSED:
 			default:

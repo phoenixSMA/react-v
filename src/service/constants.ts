@@ -191,3 +191,34 @@ export const contracts: IContract[] = [
 		formatter: 3,
 	},
 ];
+
+export const chartPeriods = [
+	{
+		name: "M1",
+		text: "1 min",
+	},
+	{
+		name: "M5",
+		text: "5 min",
+	},
+	{
+		name: "M15",
+		text: "15 min",
+	},
+	{
+		name: "M30",
+		text: "30 min",
+	},
+	{
+		name: "H1",
+		text: "1 hour",
+	},
+	{
+		name: "H4",
+		text: "4 hours",
+	},
+	{
+		name: "D1",
+		text: "1 day",
+	},
+];

@@ -1,4 +1,12 @@
-import { Actions, BidAskData, CloseLineData, CloseLinePoint, ConnectionStatus, IContract } from "../types";
+import {
+	Actions,
+	BidAskData,
+	ChartPeriods,
+	CloseLineData,
+	CloseLinePoint,
+	ConnectionStatus,
+	IContract
+} from "../types";
 import { contracts } from "../../service/constants";
 import { WebsocketTypes } from "../../service/websockets/types";
 
@@ -49,4 +57,8 @@ export const updateSymbol1CL = (data: CloseLinePoint) => {
 
 export const updateSymbol2CL = (data: CloseLinePoint) => {
 	return {type: Actions.UPDATE_SYMBOL2_CL, payload: data}
+};
+
+export const setChartPeriod = (data: ChartPeriods) => {
+	return {type: Actions.SET_CHART_PERIOD, payload: data}
 };

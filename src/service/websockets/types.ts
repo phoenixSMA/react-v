@@ -1,5 +1,5 @@
 import { HuobiWebsocket } from "./huobi";
-import { BidAskData, CloseLineData, CloseLinePoint } from "../../store/types";
+import { BidAskData, ChartPeriods, CloseLineData, CloseLinePoint } from "../../store/types";
 
 export type WebsocketTypes = HuobiWebsocket;
 
@@ -7,14 +7,14 @@ export interface SubscribeParams {
 	sub: WebsocketSubscription;
 	contract: string;
 	type?: string;
-	period?: string;
+	period?: ChartPeriods;
 	handler: WebsocketSubscribeHandler;
 }
 
 export interface RequestParams {
 	req: WebsocketRequest;
 	contract: string;
-	period?: string;
+	period?: ChartPeriods;
 	handler: WebsocketRequestHandler;
 }
 

@@ -12,6 +12,7 @@ import {
 	WebsocketSubscribeHandler,
 	WebsocketSubscription
 } from "./types";
+import { ChartPeriods } from "../../store/types";
 
 export class HuobiWebsocket implements IWebsocket {
 	private readonly _logging: boolean;
@@ -22,6 +23,15 @@ export class HuobiWebsocket implements IWebsocket {
 	private _statusHandler: WebsocketStatusHandler | null;
 	private readonly _subscriptions: Record<string, WebsocketSubscribeHandler[]>;
 	private readonly _requests: Record<string, WebsocketRequestHandler[]>;
+	private readonly _mapChartPeriods = {
+		M1: `1min`,
+		M5: `5min`,
+		M15: `15min`,
+		M30: `30min`,
+		H1: `60min`,
+		H4: `4hour`,
+		D1: `1day`,
+	};
 
 	constructor(logging: boolean = false) {
 		this._logging = logging;
@@ -96,11 +106,12 @@ export class HuobiWebsocket implements IWebsocket {
 
 	public subscribe(params: SubscribeParams) {
 		const {sub, contract, handler, period, type} = params;
+		const closeLinePeriod = this._mapChartPeriods[period || `M1`] || `1min`;
 		let subscribeMethod: string;
 		const id = `id888`;
 		switch (sub) {
 			case WebsocketSubscription.CloseLine:
-				subscribeMethod = `market.${contract}.kline.5min`;
+				subscribeMethod = `market.${contract}.kline.${closeLinePeriod}`;
 				break;
 			case WebsocketSubscription.MarketDepth:
 				subscribeMethod = `market.${contract}.depth.${type}`;
@@ -122,14 +133,15 @@ export class HuobiWebsocket implements IWebsocket {
 
 	public request(params: RequestParams) {
 		const {req, contract, period, handler} = params;
+		const closeLinePeriod = this._mapChartPeriods[period || `M1`] || `1min`;
 		if (req === WebsocketRequest.CloseLine) {
-			const requestMethod = `market.${contract}.kline.5min`;
+			const requestMethod = `market.${contract}.kline.${closeLinePeriod}`;
 			if (!this._requests[requestMethod]) {
 				this._requests[requestMethod] = [];
 			}
 			this._requests[requestMethod].push(handler);
 			const end: number = Math.round(new Date().getTime() / 1000);
-			const beg: number = end - 2000 * 300;
+			const beg: number = end - 2000 * this._calcStepInSeconds(period!);
 			this.ws!.send(JSON.stringify({
 				req: requestMethod,
 				id: `id888`,
@@ -137,6 +149,12 @@ export class HuobiWebsocket implements IWebsocket {
 				to: end,
 			}))
 		}
+	}
+
+	private _calcStepInSeconds(period: ChartPeriods) {
+		let output: number = period.substr(0, 1) === `M` ? 60 : period.substr(0, 1) === `H` ? 60 * 60 : 60 * 60 * 24;
+		output = output * (period.substr(1) as unknown as number);
+		return output;
 	}
 
 	private _logger(...args: any[]) {

@@ -17,10 +17,16 @@ export interface ISymbol extends IContract {
 	websocket: WebsocketTypes | null;
 }
 
+export type ChartPeriods = `M1` | `M5` | `M15` | `M30` | `H1` | `H4` | `D1`;
+
 export interface IState {
 	symbol1: ISymbol,
 	symbol2: ISymbol,
 	connectionStatus: ConnectionStatus,
+	chart: {
+		period: ChartPeriods;
+		price: boolean;
+	}
 }
 
 export interface IContract {
@@ -54,6 +60,7 @@ export enum Actions {
 	SET_SYMBOL2_CL = `SET_SYMBOL2_CL`,
 	UPDATE_SYMBOL1_CL = `UPDATE_SYMBOL1_CL`,
 	UPDATE_SYMBOL2_CL = `UPDATE_SYMBOL2_CL`,
+	SET_CHART_PERIOD = `SET_CHART_PERIOD`,
 }
 
 interface SetSymbol1Contract {
@@ -125,6 +132,12 @@ interface UpdateSymbol2CL {
 	payload: CloseLinePoint,
 }
 
+interface SetChartPeriod {
+	type: typeof Actions.SET_CHART_PERIOD,
+	payload: ChartPeriods,
+}
+
+
 export type  ActionTypes = SetSymbol1Contract
 	| SetSymbol2Contract
 	| ChangeConnectionStatus
@@ -138,4 +151,5 @@ export type  ActionTypes = SetSymbol1Contract
 	| SetSymbol1CL
 	| SetSymbol2CL
 	| UpdateSymbol1CL
-	| UpdateSymbol2CL;
+	| UpdateSymbol2CL
+	| SetChartPeriod;

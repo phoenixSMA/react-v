@@ -3,6 +3,7 @@ import './App.scss';
 import Header from "../header";
 import L2Container from "../containers/l2-conainer/";
 import CenterContainer from "../containers/center-container";
+import ChartViewContainer from "../containers/chart-view-container/chart-view-container";
 
 const App = () => {
 	return (
@@ -13,6 +14,7 @@ const App = () => {
 					<L2Container left={true} />
 					<CenterContainer />
 					<L2Container left={false} />
+					<ChartViewContainer />
 				</div>
 				<div className="container-horizontal row-down"></div>
 			</div>
