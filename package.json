@@ -10,6 +10,7 @@
     "@types/react-dom": "16.9.4",
     "node-sass": "^4.13.0",
     "react": "^16.11.0",
+    "react-chartjs-2": "^2.8.0",
     "react-dom": "^16.11.0",
     "react-scripts": "3.2.0",
     "redux-devtools-extension": "^2.13.8",
@@ -37,6 +38,7 @@
     ]
   },
   "devDependencies": {
+    "@types/chart.js": "^2.9.3",
     "@types/react-redux": "^7.1.5",
     "chart.js": "^2.9.3",
     "pako": "^1.0.10",

@@ -3,9 +3,17 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import reducer from "./reducers";
 import connectionHostMiddleware from "./middleware/connection-host";
 import { settingsMiddleware } from "./middleware/settings";
+import { createChartDataMiddleware } from "./middleware/create-chart-data";
+import tradingMiddleware from "./middleware/trading";
 
 const configureStore = () => {
-	return createStore(reducer, composeWithDevTools(applyMiddleware(settingsMiddleware, connectionHostMiddleware)))
+	return createStore(reducer,
+		composeWithDevTools(
+			applyMiddleware(
+				settingsMiddleware,
+				connectionHostMiddleware,
+				createChartDataMiddleware,
+				tradingMiddleware)))
 };
 
 export default configureStore;

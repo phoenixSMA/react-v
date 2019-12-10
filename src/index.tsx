@@ -7,10 +7,6 @@ import configureStore from "./store";
 
 export const store = configureStore();
 
-// store.subscribe(connectionHost.dispatcher);
-
-// websocketDemo();
-
 ReactDOM.render(
 	<Provider store={store}>
 		<App />

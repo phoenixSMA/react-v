@@ -70,7 +70,7 @@ export class HuobiWebsocket implements IWebsocket {
 						dataType = WebsocketSubscription.CloseLine;
 						data = [msg.tick.id, msg.tick.close];
 					}
-					this._subscriptions[msg.ch].forEach((handler) => {
+					this._subscriptions[msg.ch] && this._subscriptions[msg.ch].forEach((handler) => {
 						handler(this.exchange, ch[1], dataType, data)
 					});
 				} else if (msg.rep && msg.data) {
@@ -81,7 +81,7 @@ export class HuobiWebsocket implements IWebsocket {
 						dataType = WebsocketRequest.CloseLine;
 						msg.data.forEach((tick: { id: number; close: number; }) => data.push([tick.id, tick.close]));
 					}
-					this._requests[msg.rep].forEach((handler) => {
+					this._requests[msg.rep] && this._requests[msg.rep].forEach((handler) => {
 						handler(this.exchange, rep[1], dataType, data)
 					})
 				}
@@ -131,6 +131,35 @@ export class HuobiWebsocket implements IWebsocket {
 		}))
 	};
 
+	public unsubscribe(params: SubscribeParams) {
+		const {sub, contract, handler, period, type} = params;
+		const closeLinePeriod = this._mapChartPeriods[period || `M1`] || `1min`;
+		let subscribeMethod: string;
+		switch (sub) {
+			case WebsocketSubscription.CloseLine:
+				subscribeMethod = `market.${contract}.kline.${closeLinePeriod}`;
+				break;
+			case WebsocketSubscription.MarketDepth:
+				subscribeMethod = `market.${contract}.depth.${type}`;
+		}
+		if (this._subscriptions[subscribeMethod]) {
+			const idx = this._subscriptions[subscribeMethod].findIndex(
+				(h) => typeof h === typeof handler);
+			if (idx > -1) {
+				this._subscriptions[subscribeMethod] = [
+					...this._subscriptions[subscribeMethod].slice(0, idx),
+					...this._subscriptions[subscribeMethod].slice(idx + 1)
+				]
+			}
+			if (!this._subscriptions[subscribeMethod].length) {
+				this.ws!.send(JSON.stringify({
+					unsub: subscribeMethod
+				}));
+				delete this._subscriptions[subscribeMethod];
+			}
+		}
+	}
+
 	public request(params: RequestParams) {
 		const {req, contract, period, handler} = params;
 		const closeLinePeriod = this._mapChartPeriods[period || `M1`] || `1min`;
@@ -162,6 +191,5 @@ export class HuobiWebsocket implements IWebsocket {
 			console.log(...args);
 		}
 	}
-
 
 }

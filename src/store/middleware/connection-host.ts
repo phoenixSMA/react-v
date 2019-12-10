@@ -1,6 +1,7 @@
-import { Actions, ActionTypes, BidAskData, CloseLineData, CloseLinePoint, ConnectionStatus, IState } from "../types";
+import { BidAskData, CloseLineData, CloseLinePoint, ConnectionStatus, IState } from "../types";
 import { Dispatch, Middleware, MiddlewareAPI } from "redux";
 import {
+	changeConnectionStatus,
 	setConnectionStatus,
 	setSymbol1CL,
 	setSymbol1Websocket,
@@ -21,16 +22,17 @@ import {
 	WebsocketSubscribeHandler,
 	WebsocketSubscription
 } from "../../service/websockets/types";
+import { Actions, ActionTypes } from "../actions/types";
 
 const connectionHostMiddleware: Middleware = ({getState, dispatch}: MiddlewareAPI) => (next: Dispatch) => (action: ActionTypes) => {
 		let state: IState = getState();
 		const {connectionStatus, symbol1, symbol2} = state;
-		const actionType = action.type;
 
 		const statusHandler: WebsocketStatusHandler = (exchange, status, error) => {
 			state = getState();
 			const {symbol1, symbol2, chart: {period}} = state;
 			if (status === WebsocketStatus.Opened) {
+				console.log(`${new Date().toLocaleString()}: statusHandler > connected: ok`);
 				for (const symbol of [symbol1, symbol2]) {
 					if (exchange === symbol.exchange) {
 						const contract = symbol.name.split(`:`)[1];
@@ -58,11 +60,13 @@ const connectionHostMiddleware: Middleware = ({getState, dispatch}: MiddlewareAP
 					next(setConnectionStatus(ConnectionStatus.Connected));
 				}
 			} else {
+				next(setConnectionStatus(ConnectionStatus.Disconnected));
+				next(setSymbol1Websocket(null));
+				next(setSymbol2Websocket(null));
 				if (error) {
 					// todo обработать разрыв соединения - реконнесе
-				} else {
-					next(setSymbol1Websocket(null));
-					next(setSymbol2Websocket(null));
+					console.log(`${new Date().toLocaleString()}: statusHandler > disconnected: error`);
+					dispatch(changeConnectionStatus());
 				}
 			}
 		};
@@ -97,10 +101,13 @@ const connectionHostMiddleware: Middleware = ({getState, dispatch}: MiddlewareAP
 		};
 
 		const websocketByExchange = (exchange: string) => {
-			return HuobiWebsocket; //todo добавить swith при появлении новых бирж
+			if (exchange === `HUOBI`) {
+				return HuobiWebsocket; //todo добавить swith при появлении новых бирж
+			}
+			return HuobiWebsocket;
 		};
 
-		if (actionType === Actions.CHANGE_CONNECTION_STATUS) {
+		if (action.type === Actions.CHANGE_CONNECTION_STATUS) {
 			switch (connectionStatus) {
 				case ConnectionStatus.Disconnected:
 					let error: boolean = symbol1.name === symbol2.name;
@@ -114,6 +121,8 @@ const connectionHostMiddleware: Middleware = ({getState, dispatch}: MiddlewareAP
 					const websocketClass = websocketByExchange(symbol1.exchange);
 					let websocket = new websocketClass(false);
 					websocket.open(statusHandler);
+					// @ts-ignore
+					window.wss = websocket;
 					next(setSymbol1Websocket(websocket));
 					if (symbol2.exchange !== symbol1.exchange) {
 						const websocketClass = websocketByExchange(symbol1.exchange);
@@ -125,15 +134,47 @@ const connectionHostMiddleware: Middleware = ({getState, dispatch}: MiddlewareAP
 				case ConnectionStatus.Connected:
 					symbol1.websocket!.close();
 					symbol2.websocket!.close();
+					break;
 				default:
 					next(setConnectionStatus(ConnectionStatus.Disconnected));
 			}
+		} else if (action.type === Actions.SET_CHART_PERIOD) {
+			for (const symbol of [symbol1, symbol2]) {
+				const contract = symbol.name.split(`:`)[1];
+				const {chart: {period}} = state;
+				if (symbol.websocket) {
+					symbol.websocket!.unsubscribe({
+						sub: WebsocketSubscription.CloseLine,
+						contract,
+						period,
+						handler: streamHandler,
+					});
+				}
+			}
+			next(action);
+			state = getState();
+			for (const symbol of [symbol1, symbol2]) {
+				const contract = symbol.name.split(`:`)[1];
+				const {chart: {period}} = state;
+				if (symbol.websocket) {
+					symbol.websocket!.request({
+						req: WebsocketRequest.CloseLine,
+						contract,
+						period,
+						handler: requestHandler,
+					});
+					symbol.websocket!.subscribe({
+						sub: WebsocketSubscription.CloseLine,
+						contract,
+						period,
+						handler: streamHandler,
+					});
+				}
+			}
 		} else {
-			console.log(`else Action: `, action);
 			next(action);
 		}
 	}
 ;
-
 
 export default connectionHostMiddleware;

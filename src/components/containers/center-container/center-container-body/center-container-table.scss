@@ -1,0 +1,16 @@
+@import '../../../../components/app/scss-vars';
+
+.center-container-table {
+  td {
+    width: 25%;
+  };
+  .asks {
+    background-color: firebrick;
+    border: 1px solid $background-color;
+  }
+  .bids {
+    background-color: darkgreen;
+    //border-radius: 5px;
+    border: 1px solid $background-color;
+  }
+}

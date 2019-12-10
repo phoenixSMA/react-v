@@ -1,5 +1,15 @@
-import { ChartPeriods, CloseLineData, CloseLinePoint, ConnectionStatus, IContract, IState, ISymbol } from "../types";
+import {
+	ChartPeriods,
+	CloseLineData,
+	CloseLinePoint,
+	ConnectionStatus,
+	IContract,
+	IPricePercent,
+	IState,
+	ISymbol
+} from "../types";
 import { contracts } from "../../service/constants";
+import { data, options } from "../../components/chart3L/config";
 
 export const getCloseLine = (line: CloseLineData, point: CloseLinePoint) => {
 	const idx = line.findIndex((clp: CloseLinePoint) => clp[0] === point[0]);
@@ -30,18 +40,59 @@ const emptySymbol: ISymbol = {
 	websocket: null,
 };
 
+const emptyPricePercent = (): IPricePercent => {
+	return {
+		price: undefined,
+		percent: undefined,
+	}
+};
+
+const emptySpread = (percent: number) => {
+	return {
+		level: {
+			price: undefined,
+			percent,
+		},
+		orders: {
+			symbol1: {
+				price: undefined,
+				side: undefined,
+			},
+			symbol2: {
+				price: undefined,
+				side: undefined,
+			},
+		},
+	}
+};
+
 export const initialState = (): IState => {
 	const contract1: IContract = contracts.find(({name}) => name === localStorage.getItem(`symbol1`)) || contracts[0];
 	const contract2: IContract = contracts.find(({name}) => name === localStorage.getItem(`symbol2`)) || contracts[0];
 	const period: ChartPeriods = localStorage.getItem(`period`) as ChartPeriods || `M1`;
-	const price: boolean = JSON.parse(localStorage.getItem(`price`) || `true`);
+	const viewMode: string = localStorage.getItem(`viewMode`) || `price`;
+	const sellLevel = 0.2;
+	const buyLevel = -0.2;
+	data.datasets![0].label = `${contract1.name} - ${contract2.name}`;
+	data.datasets![1].label = contract1.name;
+	data.datasets![2].label = contract2.name;
 	return {
 		symbol1: Object.assign({}, emptySymbol, contract1),
 		symbol2: Object.assign({}, emptySymbol, contract2),
 		connectionStatus: ConnectionStatus.Disconnected,
 		chart: {
 			period,
-			price
-		}
+			viewMode,
+			data,
+			options,
+		},
+		trading: {
+			asks: emptyPricePercent(),
+			bids: emptyPricePercent(),
+			buyMarket: emptyPricePercent(),
+			sellMarket: emptyPricePercent(),
+			spreadSell: emptySpread(sellLevel),
+			spreadBuy: emptySpread(buyLevel),
+		},
 	}
 };
