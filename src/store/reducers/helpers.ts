@@ -90,6 +90,7 @@ export const initialState = (): IState => {
 			bids: emptyPricePercent(),
 			buyMarket: emptyPricePercent(),
 			sellMarket: emptyPricePercent(),
+			spreadMarket: emptyPricePercent(),
 			spreadSell: emptySpread(sellLevel),
 			spreadBuy: emptySpread(buyLevel),
 		},

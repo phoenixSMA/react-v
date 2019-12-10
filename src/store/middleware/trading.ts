@@ -13,19 +13,29 @@ const tradingMiddleware: Middleware = ({getState}: MiddlewareAPI) => (next: Disp
 		case Actions.UPDATE_SYMBOL1_L2:
 		case Actions.UPDATE_SYMBOL2_L2:
 			const mid1 = (symbol1.asks[symbol1.asks.length - 1][0] + symbol1.bids[0][0]) / 2;
-			trading.asks = calcPricePercent(symbol1.asks[symbol1.asks.length - 1][0] - symbol2.asks[symbol2.asks.length - 1][0], mid1, formatter);
-			trading.bids = calcPricePercent(symbol1.bids[0][0] - symbol2.bids[0][0], mid1, formatter);
-			trading.buyMarket = calcPricePercent(symbol1.asks[symbol1.asks.length - 1][0] - symbol2.bids[0][0], mid1, formatter);
-			trading.sellMarket = calcPricePercent(symbol1.bids[0][0] - symbol2.asks[symbol2.asks.length - 1][0], mid1, formatter);
+			trading.asks = calcPercentFromPrice(symbol1.asks[symbol1.asks.length - 1][0] - symbol2.asks[symbol2.asks.length - 1][0], mid1, formatter);
+			trading.bids = calcPercentFromPrice(symbol1.bids[0][0] - symbol2.bids[0][0], mid1, formatter);
+			trading.buyMarket = calcPercentFromPrice(symbol1.asks[symbol1.asks.length - 1][0] - symbol2.bids[0][0], mid1, formatter);
+			trading.sellMarket = calcPercentFromPrice(symbol1.bids[0][0] - symbol2.asks[symbol2.asks.length - 1][0], mid1, formatter);
+			trading.spreadMarket = calcPercentFromPrice(+trading.buyMarket.price! - +trading.sellMarket.price!, mid1, formatter);
+			trading.spreadSell.level = calcPriceFromPercent(+trading.spreadSell.level.percent!, mid1, formatter);
+			trading.spreadBuy.level = calcPriceFromPercent(+trading.spreadBuy.level.percent!, mid1, formatter);
 			next(updateTradingPrices(trading));
 	}
 };
 
 export default tradingMiddleware;
 
-const calcPricePercent = (value: number, base: number, formatter: number): IPricePercent => {
+const calcPercentFromPrice = (price: number, base: number, formatter: number): IPricePercent => {
 	return {
-		price: value.toFixed(formatter),
-		percent: (value / base * 100).toFixed(3)
+		price: price.toFixed(formatter),
+		percent: (price / base * 100).toFixed(3)
+	};
+};
+
+const calcPriceFromPercent = (percent: number, base: number, formatter: number): IPricePercent => {
+	return {
+		price: (percent * base / 100).toFixed(formatter),
+		percent: percent.toFixed(3)
 	};
 };

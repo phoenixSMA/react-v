@@ -38,6 +38,7 @@ export interface ITradingPrices {
 	bids: IPricePercent;
 	sellMarket: IPricePercent;
 	buyMarket: IPricePercent;
+	spreadMarket: IPricePercent;
 	spreadSell: ISpreadPrices;
 	spreadBuy: ISpreadPrices;
 }
@@ -48,10 +49,7 @@ export interface IPricePercent {
 }
 
 export interface ISpreadPrices {
-	level: {
-		price: number | undefined;
-		percent: number;
-	},
+	level: IPricePercent,
 	orders: {
 		symbol1: {
 			price:  number | undefined;
