@@ -17,8 +17,6 @@ export enum Actions {
 	SET_SYMBOL2_CONTRACT = `SET_SYMBOL2`,
 	CHANGE_CONNECTION_STATUS = `CHANGE_CONNECTION_STATUS`,
 	SET_CONNECTION_STATUS = `SET_CONNECTION_STATUS`,
-	SET_SYMBOL1_WEBSOCKET = `SET_SYMBOL1_WEBSOCKET`,
-	SET_SYMBOL2_WEBSOCKET = `SET_SYMBOL2_WEBSOCKET`,
 	WEBSOCKET_OPENED = `WEBSOCKET_OPENED`,
 	WEBSOCKET_CLOSED = `WEBSOCKET_CLOSED`,
 	UPDATE_SYMBOL1_L2 = `UPDATE_SYMBOL1_L2`,
@@ -56,16 +54,6 @@ export interface ChangeConnectionStatus {
 export interface SetConnectionStatus {
 	type: typeof Actions.SET_CONNECTION_STATUS;
 	payload: ConnectionStatus;
-}
-
-export interface SetSymbol1Websocket {
-	type: typeof Actions.SET_SYMBOL1_WEBSOCKET,
-	payload: WebsocketTypes,
-}
-
-export interface SetSymbol2Websocket {
-	type: typeof Actions.SET_SYMBOL2_WEBSOCKET,
-	payload: WebsocketTypes,
 }
 
 export interface WebsocketOpened {
@@ -152,8 +140,6 @@ export type  ActionTypes = SetSymbol1Contract
 	| SetSymbol2Contract
 	| ChangeConnectionStatus
 	| SetConnectionStatus
-	| SetSymbol1Websocket
-	| SetSymbol2Websocket
 	| WebsocketOpened
 	| WebsocketClosed
 	| UpdateSymbol1L2

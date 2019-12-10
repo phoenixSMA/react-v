@@ -16,7 +16,6 @@ export interface ISymbol extends IContract {
 	asks: L2Data;
 	bids: L2Data;
 	closeLine: CloseLineData;
-	websocket: WebsocketTypes | null;
 }
 
 export type ChartPeriods = `M1` | `M5` | `M15` | `M30` | `H1` | `H4` | `D1`;

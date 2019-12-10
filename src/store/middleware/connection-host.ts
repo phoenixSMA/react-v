@@ -4,9 +4,7 @@ import {
 	changeConnectionStatus,
 	setConnectionStatus,
 	setSymbol1CL,
-	setSymbol1Websocket,
 	setSymbol2CL,
-	setSymbol2Websocket,
 	updateSymbol1CL,
 	updateSymbol1L2,
 	updateSymbol2CL,
@@ -20,9 +18,12 @@ import {
 	WebsocketStatus,
 	WebsocketStatusHandler,
 	WebsocketSubscribeHandler,
-	WebsocketSubscription
+	WebsocketSubscription,
+	WebsocketTypes
 } from "../../service/websockets/types";
 import { Actions, ActionTypes } from "../actions/types";
+
+export let openedWebsockets: WebsocketTypes[] = [];
 
 const connectionHostMiddleware: Middleware = ({getState, dispatch}: MiddlewareAPI) => (next: Dispatch) => (action: ActionTypes) => {
 		let state: IState = getState();
@@ -36,19 +37,20 @@ const connectionHostMiddleware: Middleware = ({getState, dispatch}: MiddlewareAP
 				for (const symbol of [symbol1, symbol2]) {
 					if (exchange === symbol.exchange) {
 						const contract = symbol.name.split(`:`)[1];
-						symbol.websocket!.subscribe({
+						const websocket = symbol === symbol1 ? openedWebsockets[0] : openedWebsockets[1];
+						websocket.subscribe({
 							sub: WebsocketSubscription.MarketDepth,
 							contract,
 							type: `step6`,
 							handler: streamHandler,
 						});
-						symbol.websocket!.request({
+						websocket.request({
 							req: WebsocketRequest.CloseLine,
 							contract,
 							period,
 							handler: requestHandler,
 						});
-						symbol.websocket!.subscribe({
+						websocket.subscribe({
 							sub: WebsocketSubscription.CloseLine,
 							contract,
 							period,
@@ -56,13 +58,12 @@ const connectionHostMiddleware: Middleware = ({getState, dispatch}: MiddlewareAP
 						});
 					}
 				}
-				if (symbol1.websocket!.status === WebsocketStatus.Opened && symbol2.websocket!.status === WebsocketStatus.Opened) {
+				if (openedWebsockets[0].status === WebsocketStatus.Opened && openedWebsockets[1].status === WebsocketStatus.Opened) {
 					next(setConnectionStatus(ConnectionStatus.Connected));
 				}
 			} else {
 				next(setConnectionStatus(ConnectionStatus.Disconnected));
-				next(setSymbol1Websocket(null));
-				next(setSymbol2Websocket(null));
+				openedWebsockets = [];
 				if (error) {
 					// todo обработать разрыв соединения - реконнесе
 					console.log(`${new Date().toLocaleString()}: statusHandler > disconnected: error`);
@@ -123,17 +124,18 @@ const connectionHostMiddleware: Middleware = ({getState, dispatch}: MiddlewareAP
 					websocket.open(statusHandler);
 					// @ts-ignore
 					window.wss = websocket;
-					next(setSymbol1Websocket(websocket));
+					openedWebsockets.push(websocket);
 					if (symbol2.exchange !== symbol1.exchange) {
 						const websocketClass = websocketByExchange(symbol1.exchange);
 						websocket = new websocketClass(false);
 						websocket.open(statusHandler);
 					}
-					next(setSymbol2Websocket(websocket));
+					openedWebsockets.push(websocket);
 					break;
 				case ConnectionStatus.Connected:
-					symbol1.websocket!.close();
-					symbol2.websocket!.close();
+					for (const websocket of openedWebsockets) {
+						websocket.close();
+					}
 					break;
 				default:
 					next(setConnectionStatus(ConnectionStatus.Disconnected));
@@ -141,9 +143,10 @@ const connectionHostMiddleware: Middleware = ({getState, dispatch}: MiddlewareAP
 		} else if (action.type === Actions.SET_CHART_PERIOD) {
 			for (const symbol of [symbol1, symbol2]) {
 				const contract = symbol.name.split(`:`)[1];
+				const websocket = symbol === symbol1 ? openedWebsockets[0] : openedWebsockets[1];
 				const {chart: {period}} = state;
-				if (symbol.websocket) {
-					symbol.websocket!.unsubscribe({
+				if (websocket) {
+					websocket.unsubscribe({
 						sub: WebsocketSubscription.CloseLine,
 						contract,
 						period,
@@ -155,15 +158,16 @@ const connectionHostMiddleware: Middleware = ({getState, dispatch}: MiddlewareAP
 			state = getState();
 			for (const symbol of [symbol1, symbol2]) {
 				const contract = symbol.name.split(`:`)[1];
+				const websocket = symbol === symbol1 ? openedWebsockets[0] : openedWebsockets[1];
 				const {chart: {period}} = state;
-				if (symbol.websocket) {
-					symbol.websocket!.request({
+				if (websocket) {
+					websocket.request({
 						req: WebsocketRequest.CloseLine,
 						contract,
 						period,
 						handler: requestHandler,
 					});
-					symbol.websocket!.subscribe({
+					websocket.subscribe({
 						sub: WebsocketSubscription.CloseLine,
 						contract,
 						period,

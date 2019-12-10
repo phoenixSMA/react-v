@@ -66,10 +66,6 @@ const reducer = (
 			}
 			case Actions.SET_CONNECTION_STATUS:
 				return {...state, connectionStatus: action.payload};
-			case Actions.SET_SYMBOL1_WEBSOCKET:
-				return {...state, symbol1: {...state.symbol1, websocket: action.payload}};
-			case Actions.SET_SYMBOL2_WEBSOCKET:
-				return {...state, symbol2: {...state.symbol2, websocket: action.payload}};
 			case Actions.UPDATE_SYMBOL1_L2:
 				return {...state, symbol1: {...state.symbol1, ...action.payload}};
 			case Actions.UPDATE_SYMBOL2_L2:

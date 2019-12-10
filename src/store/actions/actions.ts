@@ -31,14 +31,6 @@ export const setConnectionStatus = (status: ConnectionStatus) => {
 	return {type: Actions.SET_CONNECTION_STATUS, payload: status};
 };
 
-export const setSymbol1Websocket = (websocket: WebsocketTypes | null) => {
-	return {type: Actions.SET_SYMBOL1_WEBSOCKET, payload: websocket};
-};
-
-export const setSymbol2Websocket = (websocket: WebsocketTypes | null) => {
-	return {type: Actions.SET_SYMBOL2_WEBSOCKET, payload: websocket};
-};
-
 export const updateSymbol1L2 = (data: BidAskData) => {
 	return {type: Actions.UPDATE_SYMBOL1_L2, payload: data}
 };

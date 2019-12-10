@@ -37,7 +37,6 @@ const emptySymbol: ISymbol = {
 	...contracts[0],
 	...resetL2(),
 	closeLine: [],
-	websocket: null,
 };
 
 const emptyPricePercent = (): IPricePercent => {
