@@ -10,59 +10,60 @@ const reducer = (
 			state = initialState();
 		}
 		switch (action.type) {
-			case Actions.SET_SYMBOL1_CONTRACT: {
-				const symbol1 = {...state.symbol1, ...action.payload, ...resetL2()};
-				const {symbol2} = state;
-				const chart = {
-					...state.chart,
-					data: {
-						...state.chart.data,
-						datasets: [
-							{
-								...state.chart.data.datasets[0],
-								label: `${symbol1.name} - ${symbol2.name}`,
-								data: [],
-							},
-							{
-								...state.chart.data.datasets[1],
-								label: `${symbol1.name}`,
-								data: [],
-							},
-							{
-								...state.chart.data.datasets[2],
-								data: [],
-							}
-						]
-					},
-				};
-				return {...state, symbol1, chart};
-			}
-			case Actions.SET_SYMBOL2_CONTRACT: {
-				const {symbol1} = state;
-				const symbol2 = {...state.symbol2, ...action.payload, ...resetL2()};
-				const chart = {
-					...state.chart,
-					data: {
-						...state.chart.data,
-						datasets: [
-							{
-								...state.chart.data.datasets[0],
-								label: `${symbol1.name} - ${symbol2.name}`,
-								data: [],
-							},
-							{
-								...state.chart.data.datasets[1],
-								data: [],
-							},
-							{
-								...state.chart.data.datasets[2],
-								label: `${symbol2.name}`,
-								data: [],
-							}
-						]
-					},
-				};
-				return {...state, symbol2, chart};
+			case Actions.SET_SYMBOL_CONTRACT: {
+				if (action.left) {
+					const symbol1 = {...state.symbol1, ...action.payload, ...resetL2()};
+					const {symbol2} = state;
+					const chart = {
+						...state.chart,
+						data: {
+							...state.chart.data,
+							datasets: [
+								{
+									...state.chart.data.datasets[0],
+									label: `${symbol1.name} - ${symbol2.name}`,
+									data: [],
+								},
+								{
+									...state.chart.data.datasets[1],
+									label: `${symbol1.name}`,
+									data: [],
+								},
+								{
+									...state.chart.data.datasets[2],
+									data: [],
+								}
+							]
+						},
+					};
+					return {...state, symbol1, chart};
+				} else {
+					const {symbol1} = state;
+					const symbol2 = {...state.symbol2, ...action.payload, ...resetL2()};
+					const chart = {
+						...state.chart,
+						data: {
+							...state.chart.data,
+							datasets: [
+								{
+									...state.chart.data.datasets[0],
+									label: `${symbol1.name} - ${symbol2.name}`,
+									data: [],
+								},
+								{
+									...state.chart.data.datasets[1],
+									data: [],
+								},
+								{
+									...state.chart.data.datasets[2],
+									label: `${symbol2.name}`,
+									data: [],
+								}
+							]
+						},
+					};
+					return {...state, symbol2, chart};
+				}
 			}
 			case Actions.SET_CONNECTION_STATUS:
 				return {...state, connectionStatus: action.payload};

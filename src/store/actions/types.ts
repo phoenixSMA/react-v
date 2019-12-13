@@ -11,8 +11,7 @@ import {
 import { ChartTimePriceData } from "../../components/chart3L/types";
 
 export enum Actions {
-	SET_SYMBOL1_CONTRACT = `SET_SYMBOL1`,
-	SET_SYMBOL2_CONTRACT = `SET_SYMBOL2`,
+	SET_SYMBOL_CONTRACT = `SET_SYMBOL_CONTRACT`,
 	CHANGE_CONNECTION_STATUS = `CHANGE_CONNECTION_STATUS`,
 	SET_CONNECTION_STATUS = `SET_CONNECTION_STATUS`,
 	WEBSOCKET_OPENED = `WEBSOCKET_OPENED`,
@@ -30,14 +29,10 @@ export enum Actions {
 	UPDATE_TRADING_PRICES = `UPDATE_TRADING_PRICES`,
 }
 
-export interface SetSymbol1Contract {
-	type: typeof Actions.SET_SYMBOL1_CONTRACT;
+export interface SetSymbolContract {
+	type: typeof Actions.SET_SYMBOL_CONTRACT;
 	payload: IContract;
-}
-
-export interface SetSymbol2Contract {
-	type: typeof Actions.SET_SYMBOL2_CONTRACT;
-	payload: IContract;
+	left: boolean;
 }
 
 export interface ChangeConnectionStatus {
@@ -115,8 +110,7 @@ export interface UpdateTradingPrices {
 	payload: ITradingPrices;
 }
 
-export type  ActionTypes = SetSymbol1Contract
-	| SetSymbol2Contract
+export type  ActionTypes = SetSymbolContract
 	| ChangeConnectionStatus
 	| SetConnectionStatus
 	| WebsocketOpened

@@ -5,21 +5,20 @@ import { contracts } from "../../../service/constants";
 import Select from "../../elements/select";
 import L2Table, { IL2TableProps } from "./l2-table";
 import { ConnectionStatus, IState } from "../../../store/types";
-import { bindActionCreators, Dispatch } from "redux";
-import { setSymbol1Contract, setSymbol2Contract } from "../../../store/actions/actions";
+import { setSymbolContract } from "../../../store/actions/actions";
 
 interface IL2ContainerProps extends IL2TableProps {
-	connectionStatus?: ConnectionStatus,
+	connectionStatus?: ConnectionStatus;
 	selectedValue?: string;
-	setSymbol?: typeof setSymbol1Contract | typeof setSymbol2Contract;
+	setSymbolContract?: typeof setSymbolContract;
 }
 
 const L2Container: React.FunctionComponent<IL2ContainerProps> = (props) => {
-	const {connectionStatus, formatter, asks, bids, left, selectedValue, setSymbol} = props;
+	const {connectionStatus, formatter, asks, bids, left, selectedValue, setSymbolContract} = props;
 	const tableProps = {formatter, asks, bids, left};
 	const disabled = connectionStatus !== ConnectionStatus.Disconnected;
 	const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-			setSymbol && setSymbol(e.target.value);
+		setSymbolContract && setSymbolContract(e.target.value, left);
 	};
 	return (
 		<div className="container-l2">
@@ -49,12 +48,6 @@ const mapStateToProps = (state: IState, ownProps: IL2ContainerProps) => {
 	}
 };
 
-const mapDispatchToProps = (dispatch: Dispatch, ownProps: IL2ContainerProps) => {
-	const {left} = ownProps;
-	const setSymbol = left ? setSymbol1Contract : setSymbol2Contract;
-	return {
-		setSymbol: bindActionCreators(setSymbol, dispatch),
-	}
-};
+const mapDispatchToProps = {setSymbolContract};
 
 export default connect(mapStateToProps, mapDispatchToProps)(L2Container);

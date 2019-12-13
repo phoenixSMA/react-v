@@ -1,19 +1,17 @@
 import { Dispatch, Middleware, MiddlewareAPI } from "redux";
 import { Actions, ActionTypes } from "../actions/types";
 import { contracts } from "../../service/constants";
-import { setSymbol2Contract } from "../actions/actions";
+import { setSymbolContract } from "../actions/actions";
 
 export const settingsMiddleware: Middleware = ({dispatch}: MiddlewareAPI) => (next: Dispatch) => (action: ActionTypes) => {
 	switch (action.type) {
-		case Actions.SET_SYMBOL1_CONTRACT: {
+		case Actions.SET_SYMBOL_CONTRACT: {
 			const {name} = action.payload;
-			localStorage.setItem(`symbol1`, name);
-			dispatch(setSymbol2Contract(findPair(name)));
-			break;
-		}
-		case Actions.SET_SYMBOL2_CONTRACT: {
-			const {name} = action.payload;
-			localStorage.setItem(`symbol2`, name);
+			const symbolSide = action.left ? `symbol1` : `symbol2`;
+			localStorage.setItem(symbolSide, name);
+			if (action.left) {
+				dispatch(setSymbolContract(findPair(name), !action.left));
+			}
 			break;
 		}
 		case Actions.SET_CHART_PERIOD: {

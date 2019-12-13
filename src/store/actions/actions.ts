@@ -8,16 +8,12 @@ import {
 	ITradingPrices
 } from "../types";
 import { contracts } from "../../service/constants";
-import { Actions, SetChartViewMode, UpdateTradingPrices } from "./types";
+import { Actions, SetChartViewMode, SetSymbolContract, UpdateTradingPrices } from "./types";
 import { ChartTimePriceData } from "../../components/chart3L/types";
 
-export const setSymbol1Contract = (name: string) => {
-	const contract: IContract | undefined = contracts.find((cont) => cont.name === name);
-	return {type: Actions.SET_SYMBOL1_CONTRACT, payload: contract}
-};
-export const setSymbol2Contract = (name: string) => {
-	const contract: IContract | undefined = contracts.find((cont) => cont.name === name);
-	return {type: Actions.SET_SYMBOL2_CONTRACT, payload: contract}
+export const setSymbolContract = (name: string, left: boolean): SetSymbolContract => {
+	const contract: IContract = contracts.find((cont) => cont.name === name) || contracts[0];
+	return {type: Actions.SET_SYMBOL_CONTRACT, payload: contract, left}
 };
 
 export const changeConnectionStatus = () => {
