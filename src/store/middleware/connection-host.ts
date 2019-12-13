@@ -6,9 +6,8 @@ import {
 	setSymbol1CL,
 	setSymbol2CL,
 	updateSymbol1CL,
-	updateSymbol1L2,
 	updateSymbol2CL,
-	updateSymbol2L2
+	updateSymbolL2
 } from "../actions/actions";
 import { HuobiWebsocket } from "../../service/websockets/huobi";
 import {
@@ -75,10 +74,10 @@ const connectionHostMiddleware: Middleware = ({getState, dispatch}: MiddlewareAP
 		const streamHandler: WebsocketSubscribeHandler = (exchange: string, symbol: string, sub: WebsocketSubscription, data: SubsriptionData) => {
 			if (sub === WebsocketSubscription.MarketDepth) {
 				if (`${exchange}:${symbol}` === symbol1.name) {
-					next(updateSymbol1L2(data as BidAskData));
+					next(updateSymbolL2(data as BidAskData, 1));
 				}
 				if (`${exchange}:${symbol}` === symbol2.name) {
-					next(updateSymbol2L2(data as BidAskData));
+					next(updateSymbolL2(data as BidAskData, 2));
 				}
 			} else if (sub === WebsocketSubscription.CloseLine) {
 				if (`${exchange}:${symbol}` === symbol1.name) {

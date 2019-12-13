@@ -16,8 +16,7 @@ export enum Actions {
 	SET_CONNECTION_STATUS = `SET_CONNECTION_STATUS`,
 	WEBSOCKET_OPENED = `WEBSOCKET_OPENED`,
 	WEBSOCKET_CLOSED = `WEBSOCKET_CLOSED`,
-	UPDATE_SYMBOL1_L2 = `UPDATE_SYMBOL1_L2`,
-	UPDATE_SYMBOL2_L2 = `UPDATE_SYMBOL2_L2`,
+	UPDATE_SYMBOL_L2 = `UPDATE_SYMBOL_L2`,
 	SET_SYMBOL1_CL = `SET_SYMBOL1_CL`,
 	SET_SYMBOL2_CL = `SET_SYMBOL2_CL`,
 	UPDATE_SYMBOL1_CL = `UPDATE_SYMBOL1_CL`,
@@ -45,23 +44,19 @@ export interface SetConnectionStatus {
 }
 
 export interface WebsocketOpened {
-	type: typeof Actions.WEBSOCKET_OPENED,
-	payload: { exchange: string },
+	type: typeof Actions.WEBSOCKET_OPENED;
+	payload: { exchange: string };
 }
 
 export interface WebsocketClosed {
-	type: typeof Actions.WEBSOCKET_CLOSED,
-	payload: { exchange: string, error: boolean },
+	type: typeof Actions.WEBSOCKET_CLOSED;
+	payload: { exchange: string, error: boolean };
 }
 
-export interface UpdateSymbol1L2 {
-	type: typeof Actions.UPDATE_SYMBOL1_L2,
-	payload: BidAskData,
-}
-
-export interface UpdateSymbol2L2 {
-	type: typeof Actions.UPDATE_SYMBOL2_L2,
-	payload: BidAskData,
+export interface UpdateSymbolL2 {
+	type: typeof Actions.UPDATE_SYMBOL_L2;
+	payload: BidAskData;
+	meta: 1 | 2;
 }
 
 export interface SetSymbol1CL {
@@ -115,8 +110,7 @@ export type  ActionTypes = SetSymbolContract
 	| SetConnectionStatus
 	| WebsocketOpened
 	| WebsocketClosed
-	| UpdateSymbol1L2
-	| UpdateSymbol2L2
+	| UpdateSymbolL2
 	| SetSymbol1CL
 	| SetSymbol2CL
 	| UpdateSymbol1CL

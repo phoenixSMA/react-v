@@ -8,7 +8,14 @@ import {
 	ITradingPrices
 } from "../types";
 import { contracts } from "../../service/constants";
-import { Actions, SetChartViewMode, SetSymbolContract, UpdateTradingPrices } from "./types";
+import {
+	Actions,
+	ChangeConnectionStatus,
+	SetChartViewMode,
+	SetSymbolContract,
+	UpdateSymbolL2,
+	UpdateTradingPrices
+} from "./types";
 import { ChartTimePriceData } from "../../components/chart3L/types";
 
 export const setSymbolContract = (name: string, left: boolean): SetSymbolContract => {
@@ -16,7 +23,7 @@ export const setSymbolContract = (name: string, left: boolean): SetSymbolContrac
 	return {type: Actions.SET_SYMBOL_CONTRACT, payload: contract, left}
 };
 
-export const changeConnectionStatus = () => {
+export const changeConnectionStatus = (): ChangeConnectionStatus => {
 	return {type: Actions.CHANGE_CONNECTION_STATUS}
 };
 
@@ -24,12 +31,8 @@ export const setConnectionStatus = (status: ConnectionStatus) => {
 	return {type: Actions.SET_CONNECTION_STATUS, payload: status};
 };
 
-export const updateSymbol1L2 = (data: BidAskData) => {
-	return {type: Actions.UPDATE_SYMBOL1_L2, payload: data}
-};
-
-export const updateSymbol2L2 = (data: BidAskData) => {
-	return {type: Actions.UPDATE_SYMBOL2_L2, payload: data}
+export const updateSymbolL2 = (data: BidAskData, meta: 1|2): UpdateSymbolL2 => {
+	return {type: Actions.UPDATE_SYMBOL_L2, payload: data, meta}
 };
 
 export const setSymbol1CL = (data: CloseLineData) => {

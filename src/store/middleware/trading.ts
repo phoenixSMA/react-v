@@ -10,35 +10,33 @@ const tradingMiddleware: Middleware = ({getState}: MiddlewareAPI) => (next: Disp
 	const {symbol1, symbol2} = state;
 	const trading: ITradingPrices = JSON.parse(JSON.stringify(state.trading));
 	const formatter = Math.min(symbol1.formatter, symbol2.formatter);
-	switch (action.type) {
-		case Actions.UPDATE_SYMBOL1_L2:
-		case Actions.UPDATE_SYMBOL2_L2:
-			const s1Ask = symbol1.asks[0][0];
-			const s1Bid = symbol1.bids[0][0];
-			const s2Ask = symbol2.asks[0][0];
-			const s2Bid = symbol2.bids[0][0];
-			const mid1 = (s1Ask + s1Bid) / 2;
-			trading.deltaAsks = calcPercentFromPrice(s1Ask - s2Ask, mid1, `round`, formatter);
-			trading.deltaBids = calcPercentFromPrice(s1Bid - s2Bid, mid1, `round`, formatter);
-			trading.buyMarket = calcPercentFromPrice(s1Ask - s2Bid, mid1, `round`, formatter);
-			trading.sellMarket = calcPercentFromPrice(s1Bid - s2Ask, mid1, `round`, formatter);
-			trading.spreadBO = calcPercentFromPrice(+trading.buyMarket.price! - +trading.sellMarket.price!, mid1, `round`, formatter);
-			trading.spreadSell.level = calcPriceFromPercent(+trading.spreadSell.level.percent!, mid1, `ceil`, formatter);
-			trading.spreadBuy.level = calcPriceFromPercent(+trading.spreadBuy.level.percent!, mid1, `floor`, formatter);
-			const s1AskLimit = trading.spreadSell.level.price! + s2Ask;
-			const s1BidLimit = trading.spreadBuy.level.price! + s2Bid;
-			const s2AskLimit = s1Ask - trading.spreadBuy.level.price!;
-			const s2BidLimit = s1Bid - trading.spreadSell.level.price!;
-			trading.spreadBuy.orders.symbol1.side = OrderSides.Buy;
-			trading.spreadBuy.orders.symbol1.price = decAdjust(`floor`, s1BidLimit, -formatter);
-			trading.spreadBuy.orders.symbol2.side = OrderSides.Sell;
-			trading.spreadBuy.orders.symbol2.price = decAdjust(`ceil`, s2AskLimit, -formatter);
-			trading.spreadSell.orders.symbol1.side = OrderSides.Sell;
-			trading.spreadSell.orders.symbol1.price = decAdjust(`ceil`, s1AskLimit, -formatter);
-			trading.spreadSell.orders.symbol2.side = OrderSides.Buy;
-			trading.spreadSell.orders.symbol2.price = decAdjust(`floor`, s2BidLimit, -formatter);
-			trading.formatter = formatter;
-			next(updateTradingPrices(trading));
+	if (action.type === Actions.UPDATE_SYMBOL_L2) {
+		const s1Ask = symbol1.asks[0][0];
+		const s1Bid = symbol1.bids[0][0];
+		const s2Ask = symbol2.asks[0][0];
+		const s2Bid = symbol2.bids[0][0];
+		const mid1 = (s1Ask + s1Bid) / 2;
+		trading.deltaAsks = calcPercentFromPrice(s1Ask - s2Ask, mid1, `round`, formatter);
+		trading.deltaBids = calcPercentFromPrice(s1Bid - s2Bid, mid1, `round`, formatter);
+		trading.buyMarket = calcPercentFromPrice(s1Ask - s2Bid, mid1, `round`, formatter);
+		trading.sellMarket = calcPercentFromPrice(s1Bid - s2Ask, mid1, `round`, formatter);
+		trading.spreadBO = calcPercentFromPrice(+trading.buyMarket.price! - +trading.sellMarket.price!, mid1, `round`, formatter);
+		trading.spreadSell.level = calcPriceFromPercent(+trading.spreadSell.level.percent!, mid1, `ceil`, formatter);
+		trading.spreadBuy.level = calcPriceFromPercent(+trading.spreadBuy.level.percent!, mid1, `floor`, formatter);
+		const s1AskLimit = trading.spreadSell.level.price! + s2Ask;
+		const s1BidLimit = trading.spreadBuy.level.price! + s2Bid;
+		const s2AskLimit = s1Ask - trading.spreadBuy.level.price!;
+		const s2BidLimit = s1Bid - trading.spreadSell.level.price!;
+		trading.spreadBuy.orders.symbol1.side = OrderSides.Buy;
+		trading.spreadBuy.orders.symbol1.price = decAdjust(`floor`, s1BidLimit, -formatter);
+		trading.spreadBuy.orders.symbol2.side = OrderSides.Sell;
+		trading.spreadBuy.orders.symbol2.price = decAdjust(`ceil`, s2AskLimit, -formatter);
+		trading.spreadSell.orders.symbol1.side = OrderSides.Sell;
+		trading.spreadSell.orders.symbol1.price = decAdjust(`ceil`, s1AskLimit, -formatter);
+		trading.spreadSell.orders.symbol2.side = OrderSides.Buy;
+		trading.spreadSell.orders.symbol2.price = decAdjust(`floor`, s2BidLimit, -formatter);
+		trading.formatter = formatter;
+		next(updateTradingPrices(trading));
 	}
 };
 

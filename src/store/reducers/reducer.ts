@@ -67,10 +67,12 @@ const reducer = (
 			}
 			case Actions.SET_CONNECTION_STATUS:
 				return {...state, connectionStatus: action.payload};
-			case Actions.UPDATE_SYMBOL1_L2:
-				return {...state, symbol1: {...state.symbol1, ...action.payload}};
-			case Actions.UPDATE_SYMBOL2_L2:
-				return {...state, symbol2: {...state.symbol2, ...action.payload}};
+			case Actions.UPDATE_SYMBOL_L2:
+				if (action.meta===1) {
+					return {...state, symbol1: {...state.symbol1, ...action.payload}};
+				} else {
+					return {...state, symbol2: {...state.symbol2, ...action.payload}};
+				}
 			case Actions.SET_SYMBOL1_CL:
 				return {...state, symbol1: {...state.symbol1, closeLine: action.payload}};
 			case Actions.SET_SYMBOL2_CL:
