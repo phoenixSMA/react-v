@@ -142,20 +142,6 @@ const reducer = (
 						}
 					}
 				};
-			case Actions.UPDATE_PRICE_ASKS:
-				return {...state, trading: {...state.trading, asks: {...action.payload}}};
-			case Actions.UPDATE_PRICE_BIDS:
-				return {...state, trading: {...state.trading, bids: {...action.payload}}};
-			case Actions.UPDATE_PRICE_SELLMARKET:
-				return {...state, trading: {...state.trading, sellMarket: {...action.payload}}};
-			case Actions.UPDATE_PRICE_BUYMARKET:
-				return {...state, trading: {...state.trading, buyMarket: {...action.payload}}};
-			case Actions.UPDATE_SPREAD_PRICES:
-				if (action.side === `buy`) {
-					return {...state, trading: {...state.trading, spreadBuy: {...action.payload}}};
-				} else {
-					return {...state, trading: {...state.trading, spreadSell: {...action.payload}}};
-				}
 			case Actions.UPDATE_TRADING_PRICES:
 				const trading = JSON.parse(JSON.stringify(action.payload));
 				return {...state, trading};

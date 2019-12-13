@@ -1,5 +1,4 @@
 // ACTION NAMES
-import { WebsocketTypes } from "../../service/websockets/types";
 import {
 	BidAskData,
 	ChartPeriods,
@@ -7,8 +6,7 @@ import {
 	CloseLinePoint,
 	ConnectionStatus,
 	IContract,
-	IPricePercent,
-	ISpreadPrices, ITradingPrices
+	ITradingPrices
 } from "../types";
 import { ChartTimePriceData } from "../../components/chart3L/types";
 
@@ -29,11 +27,6 @@ export enum Actions {
 	SET_CHART_VIEWMODE = `SET_CHART_VIEWMODE`,
 	SET_CHART_SYMBOL_DATA = `SET_CHART_SYMBOL_DATA`,
 	SET_CHART_SPREAD_DATA = `SET_CHART_SPREAD_DATA`,
-	UPDATE_PRICE_ASKS = `UPDATE_PRICE_ASKS`,
-	UPDATE_PRICE_BIDS = `UPDATE_PRICE_BIDS`,
-	UPDATE_PRICE_SELLMARKET = `UPDATE_PRICE_SELLMARKET`,
-	UPDATE_PRICE_BUYMARKET = `UPDATE_PRICE_BUYMARKET`,
-	UPDATE_SPREAD_PRICES = `UPDATE_SPREAD_PRICES`,
 	UPDATE_TRADING_PRICES = `UPDATE_TRADING_PRICES`,
 }
 
@@ -117,20 +110,6 @@ export interface SetChartSpreadData {
 	payload: ChartTimePriceData;
 }
 
-export interface UpdatePrice {
-	type: typeof Actions.UPDATE_PRICE_ASKS
-		| typeof Actions.UPDATE_PRICE_BIDS
-		| typeof Actions.UPDATE_PRICE_SELLMARKET
-		| typeof Actions.UPDATE_PRICE_BUYMARKET;
-	payload: IPricePercent;
-}
-
-export interface UpdateSpeadPrices {
-	type: typeof Actions.UPDATE_SPREAD_PRICES;
-	payload: ISpreadPrices;
-	side: `buy` | `sell`;
-}
-
 export interface UpdateTradingPrices {
 	type: typeof Actions.UPDATE_TRADING_PRICES;
 	payload: ITradingPrices;
@@ -152,6 +131,4 @@ export type  ActionTypes = SetSymbol1Contract
 	| SetChartViewMode
 	| SetChartSymbolData
 	| SetChartSpreadData
-	| UpdatePrice
-	| UpdateSpeadPrices
 	| UpdateTradingPrices;

@@ -11,7 +11,7 @@ interface ICenterContainerTableGrid {
 
 export const CenterContainerTable: React.FC<ICenterContainerTableGrid> = props => {
 	const {asks, center, bids} = props.grid;
-	let rows = asks.map((row, idx) => createRow(row, `asks-${idx}`));
+	let rows = asks.map((row, idx) => createRow(row, `asks-${idx}`)).reverse();
 	rows = [...rows, createRow(center, `center`)];
 	rows = [...rows, ...bids.map((row, idx) => createRow(row, `bids-${idx}`))];
 	return (

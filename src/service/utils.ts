@@ -1,4 +1,4 @@
-export function decRound(value: number, exp: number = 0): number {
+export function decAdjust(type: `floor` | `round` | `ceil`, value: number, exp: number = 0): number {
 	if (exp === 0) {
 		return Math.round(value);
 	}
@@ -8,7 +8,7 @@ export function decRound(value: number, exp: number = 0): number {
 		return NaN;
 	}
 	let strValue = value.toString().split('e');
-	value = Math.round(+(strValue[0] + 'e' + (strValue[1] ? (+strValue[1] - exp) : -exp)));
+	value = Math[type](+(strValue[0] + 'e' + (strValue[1] ? (+strValue[1] - exp) : -exp)));
 	// Обратный сдвиг
 	strValue = value.toString().split('e');
 	return +(strValue[0] + 'e' + (strValue[1] ? (+strValue[1] + exp) : exp));

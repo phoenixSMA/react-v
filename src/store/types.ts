@@ -1,4 +1,3 @@
-import { WebsocketTypes } from "../service/websockets/types";
 import { ChartData } from "react-chartjs-2";
 import { ChartOptions } from "chart.js";
 
@@ -34,30 +33,31 @@ export interface IState {
 }
 
 export interface ITradingPrices {
-	asks: IPricePercent;
-	bids: IPricePercent;
+	deltaAsks: IPricePercent;
+	deltaBids: IPricePercent;
 	sellMarket: IPricePercent;
 	buyMarket: IPricePercent;
-	spreadMarket: IPricePercent;
+	spreadBO: IPricePercent;
 	spreadSell: ISpreadPrices;
 	spreadBuy: ISpreadPrices;
+	formatter: number,
 }
 
 export interface IPricePercent {
-	price: number | string | undefined;
-	percent: number | string | undefined;
+	price: number | undefined;
+	percent: number | undefined;
 }
 
 export interface ISpreadPrices {
 	level: IPricePercent,
 	orders: {
 		symbol1: {
-			price:  number | undefined;
-			side: number |  undefined;
+			price: number | undefined;
+			side: OrderSides | undefined;
 		},
 		symbol2: {
-			price: number |  undefined;
-			side:  number | undefined;
+			price: number | undefined;
+			side: OrderSides | undefined;
 		},
 	},
 }

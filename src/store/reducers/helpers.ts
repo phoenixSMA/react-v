@@ -86,13 +86,14 @@ export const initialState = (): IState => {
 			options,
 		},
 		trading: {
-			asks: emptyPricePercent(),
-			bids: emptyPricePercent(),
+			deltaAsks: emptyPricePercent(),
+			deltaBids: emptyPricePercent(),
 			buyMarket: emptyPricePercent(),
 			sellMarket: emptyPricePercent(),
-			spreadMarket: emptyPricePercent(),
+			spreadBO: emptyPricePercent(),
 			spreadSell: emptySpread(sellLevel),
 			spreadBuy: emptySpread(buyLevel),
+			formatter: 0,
 		},
 	}
 };
