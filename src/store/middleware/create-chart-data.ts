@@ -12,22 +12,18 @@ export const createChartDataMiddleware: Middleware = ({getState}: MiddlewareAPI)
 	}
 	const price = viewMode === `price`;
 	switch (action.type) {
-		case Actions.SET_SYMBOL1_CL:
-			next(setChartSymbolData(createSymbolChartData(symbol1), 1));
+		case Actions.SET_SYMBOL_CL: {
+			const symbol = action.meta === 1 ? symbol1 : symbol2;
+			next(setChartSymbolData(createSymbolChartData(symbol), action.meta));
 			next(setChartSpreadData(createSpreadChartData1(symbol1, symbol2, price)));
 			return;
-		case Actions.SET_SYMBOL2_CL:
-			next(setChartSymbolData(createSymbolChartData(symbol2), 2));
+		}
+		case Actions.UPDATE_SYMBOL_CL: {
+			const symbol = action.meta === 1 ? symbol1 : symbol2;
+			next(setChartSymbolData(createSymbolChartData(symbol), action.meta));
 			next(setChartSpreadData(createSpreadChartData1(symbol1, symbol2, price)));
 			return;
-		case Actions.UPDATE_SYMBOL1_CL:
-			next(setChartSymbolData(createSymbolChartData(symbol1), 1));
-			next(setChartSpreadData(createSpreadChartData1(symbol1, symbol2, price)));
-			return;
-		case Actions.UPDATE_SYMBOL2_CL:
-			next(setChartSymbolData(createSymbolChartData(symbol2), 2));
-			next(setChartSpreadData(createSpreadChartData1(symbol1, symbol2, price)));
-			return;
+		}
 		case Actions.SET_CHART_VIEWMODE:
 			next(setChartSpreadData(createSpreadChartData1(symbol1, symbol2, price)));
 			return;

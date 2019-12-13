@@ -68,23 +68,25 @@ const reducer = (
 			case Actions.SET_CONNECTION_STATUS:
 				return {...state, connectionStatus: action.payload};
 			case Actions.UPDATE_SYMBOL_L2:
-				if (action.meta===1) {
+				if (action.meta === 1) {
 					return {...state, symbol1: {...state.symbol1, ...action.payload}};
 				} else {
 					return {...state, symbol2: {...state.symbol2, ...action.payload}};
 				}
-			case Actions.SET_SYMBOL1_CL:
-				return {...state, symbol1: {...state.symbol1, closeLine: action.payload}};
-			case Actions.SET_SYMBOL2_CL:
-				return {...state, symbol2: {...state.symbol2, closeLine: action.payload}};
-			case Actions.UPDATE_SYMBOL1_CL: {
-				let closeLine: CloseLineData = getCloseLine(state.symbol1.closeLine, action.payload);
-				return {...state, symbol1: {...state.symbol1, closeLine}}
-			}
-			case Actions.UPDATE_SYMBOL2_CL: {
-				let closeLine: CloseLineData = getCloseLine(state.symbol2.closeLine, action.payload);
-				return {...state, symbol2: {...state.symbol2, closeLine}}
-			}
+			case Actions.SET_SYMBOL_CL:
+				if (action.meta === 1) {
+					return {...state, symbol1: {...state.symbol1, closeLine: action.payload}};
+				} else {
+					return {...state, symbol2: {...state.symbol2, closeLine: action.payload}};
+				}
+			case Actions.UPDATE_SYMBOL_CL:
+				if (action.meta === 1) {
+					let closeLine: CloseLineData = getCloseLine(state.symbol1.closeLine, action.payload);
+					return {...state, symbol1: {...state.symbol1, closeLine}}
+				} else {
+					let closeLine: CloseLineData = getCloseLine(state.symbol2.closeLine, action.payload);
+					return {...state, symbol2: {...state.symbol2, closeLine}}
+				}
 			case Actions.SET_CHART_PERIOD:
 				return {...state, chart: {...state.chart, period: action.payload}};
 			case Actions.SET_CHART_VIEWMODE:

@@ -12,7 +12,9 @@ import {
 	Actions,
 	ChangeConnectionStatus,
 	SetChartViewMode,
+	SetSymbolCL,
 	SetSymbolContract,
+	UpdateSymbolCL,
 	UpdateSymbolL2,
 	UpdateTradingPrices
 } from "./types";
@@ -31,24 +33,16 @@ export const setConnectionStatus = (status: ConnectionStatus) => {
 	return {type: Actions.SET_CONNECTION_STATUS, payload: status};
 };
 
-export const updateSymbolL2 = (data: BidAskData, meta: 1|2): UpdateSymbolL2 => {
+export const updateSymbolL2 = (data: BidAskData, meta: 1 | 2): UpdateSymbolL2 => {
 	return {type: Actions.UPDATE_SYMBOL_L2, payload: data, meta}
 };
 
-export const setSymbol1CL = (data: CloseLineData) => {
-	return {type: Actions.SET_SYMBOL1_CL, payload: data}
+export const setSymbolCL = (data: CloseLineData, meta: 1 | 2): SetSymbolCL => {
+	return {type: Actions.SET_SYMBOL_CL, payload: data, meta}
 };
 
-export const setSymbol2CL = (data: CloseLineData) => {
-	return {type: Actions.SET_SYMBOL2_CL, payload: data}
-};
-
-export const updateSymbol1CL = (data: CloseLinePoint) => {
-	return {type: Actions.UPDATE_SYMBOL1_CL, payload: data}
-};
-
-export const updateSymbol2CL = (data: CloseLinePoint) => {
-	return {type: Actions.UPDATE_SYMBOL2_CL, payload: data}
+export const updateSymbolCL = (data: CloseLinePoint, meta: 1 | 2): UpdateSymbolCL => {
+	return {type: Actions.UPDATE_SYMBOL_CL, payload: data, meta}
 };
 
 export const setChartPeriod = (data: ChartPeriods) => {

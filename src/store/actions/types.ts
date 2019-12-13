@@ -17,10 +17,8 @@ export enum Actions {
 	WEBSOCKET_OPENED = `WEBSOCKET_OPENED`,
 	WEBSOCKET_CLOSED = `WEBSOCKET_CLOSED`,
 	UPDATE_SYMBOL_L2 = `UPDATE_SYMBOL_L2`,
-	SET_SYMBOL1_CL = `SET_SYMBOL1_CL`,
-	SET_SYMBOL2_CL = `SET_SYMBOL2_CL`,
-	UPDATE_SYMBOL1_CL = `UPDATE_SYMBOL1_CL`,
-	UPDATE_SYMBOL2_CL = `UPDATE_SYMBOL2_CL`,
+	SET_SYMBOL_CL = `SET_SYMBOL_CL`,
+	UPDATE_SYMBOL_CL = `UPDATE_SYMBOL_CL`,
 	SET_CHART_PERIOD = `SET_CHART_PERIOD`,
 	SET_CHART_VIEWMODE = `SET_CHART_VIEWMODE`,
 	SET_CHART_SYMBOL_DATA = `SET_CHART_SYMBOL_DATA`,
@@ -59,34 +57,26 @@ export interface UpdateSymbolL2 {
 	meta: 1 | 2;
 }
 
-export interface SetSymbol1CL {
-	type: typeof Actions.SET_SYMBOL1_CL,
-	payload: CloseLineData,
+export interface SetSymbolCL {
+	type: typeof Actions.SET_SYMBOL_CL;
+	payload: CloseLineData;
+	meta: 1 | 2;
 }
 
-export interface SetSymbol2CL {
-	type: typeof Actions.SET_SYMBOL2_CL,
-	payload: CloseLineData,
-}
-
-export interface UpdateSymbol1CL {
-	type: typeof Actions.UPDATE_SYMBOL1_CL,
-	payload: CloseLinePoint,
-}
-
-export interface UpdateSymbol2CL {
-	type: typeof Actions.UPDATE_SYMBOL2_CL,
-	payload: CloseLinePoint,
+export interface UpdateSymbolCL {
+	type: typeof Actions.UPDATE_SYMBOL_CL;
+	payload: CloseLinePoint;
+	meta: 1 | 2;
 }
 
 export interface SetChartPeriod {
-	type: typeof Actions.SET_CHART_PERIOD,
-	payload: ChartPeriods,
+	type: typeof Actions.SET_CHART_PERIOD;
+	payload: ChartPeriods;
 }
 
 export interface SetChartViewMode {
-	type: typeof Actions.SET_CHART_VIEWMODE,
-	payload: string,
+	type: typeof Actions.SET_CHART_VIEWMODE;
+	payload: string;
 }
 
 export interface SetChartSymbolData {
@@ -111,10 +101,8 @@ export type  ActionTypes = SetSymbolContract
 	| WebsocketOpened
 	| WebsocketClosed
 	| UpdateSymbolL2
-	| SetSymbol1CL
-	| SetSymbol2CL
-	| UpdateSymbol1CL
-	| UpdateSymbol2CL
+	| SetSymbolCL
+	| UpdateSymbolCL
 	| SetChartPeriod
 	| SetChartViewMode
 	| SetChartSymbolData

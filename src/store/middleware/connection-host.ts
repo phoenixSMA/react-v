@@ -3,10 +3,8 @@ import { Dispatch, Middleware, MiddlewareAPI } from "redux";
 import {
 	changeConnectionStatus,
 	setConnectionStatus,
-	setSymbol1CL,
-	setSymbol2CL,
-	updateSymbol1CL,
-	updateSymbol2CL,
+	setSymbolCL,
+	updateSymbolCL,
 	updateSymbolL2
 } from "../actions/actions";
 import { HuobiWebsocket } from "../../service/websockets/huobi";
@@ -81,10 +79,10 @@ const connectionHostMiddleware: Middleware = ({getState, dispatch}: MiddlewareAP
 				}
 			} else if (sub === WebsocketSubscription.CloseLine) {
 				if (`${exchange}:${symbol}` === symbol1.name) {
-					next(updateSymbol1CL(data as CloseLinePoint));
+					next(updateSymbolCL(data as CloseLinePoint, 1));
 				}
 				if (`${exchange}:${symbol}` === symbol2.name) {
-					next(updateSymbol2CL(data as CloseLinePoint));
+					next(updateSymbolCL(data as CloseLinePoint, 2));
 				}
 			}
 		};
@@ -92,10 +90,10 @@ const connectionHostMiddleware: Middleware = ({getState, dispatch}: MiddlewareAP
 		const requestHandler: WebsocketRequestHandler = (exchange, symbol, req, data) => {
 			if (req === WebsocketRequest.CloseLine) {
 				if (`${exchange}:${symbol}` === symbol1.name) {
-					next(setSymbol1CL(data as CloseLineData));
+					next(setSymbolCL(data as CloseLineData, 1));
 				}
 				if (`${exchange}:${symbol}` === symbol2.name) {
-					next(setSymbol2CL(data as CloseLineData));
+					next(setSymbolCL(data as CloseLineData, 2));
 				}
 			}
 		};
