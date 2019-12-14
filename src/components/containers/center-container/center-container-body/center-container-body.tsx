@@ -12,7 +12,6 @@ interface ICenterContainerBodyProps {
 
 const CenterContainerBody: React.FC<ICenterContainerBodyProps> = props => {
 	const {deltaAsks, deltaBids, buyMarket, sellMarket, spreadBO, spreadBuy, spreadSell, formatter} = props.trading;
-	const {symbol1, symbol2} = props;
 	const grid = {
 		asks: createEmptyGridPart(20),
 		center: [`\u00A0`, `\u00A0`, `\u00A0`, `\u00A0`],
@@ -67,18 +66,10 @@ const CenterContainerBody: React.FC<ICenterContainerBodyProps> = props => {
 		fixUndefined(3, spreadBuy.level.percent, `%`),
 		`\u00A0`,
 	];
-	let idx = symbol1.asks.findIndex(row => row[0] >= spreadSell.orders.symbol1.price!);
-	(idx === -1) && (idx = 19);
-	grid.asks[idx][0] = fixUndefined(formatter, spreadSell.orders.symbol1.price);
-	idx = symbol2.asks.findIndex(row => row[0] >= spreadBuy.orders.symbol2.price!);
-	(idx === -1) && (idx = 19);
-	grid.asks[idx][4] = fixUndefined(formatter, spreadBuy.orders.symbol2.price);
-	idx = symbol1.bids.findIndex(row => row[0] <= spreadBuy.orders.symbol1.price!);
-	(idx === -1) && (idx = 19);
-	grid.bids[idx][0] = fixUndefined(formatter, spreadBuy.orders.symbol1.price);
-	idx = symbol2.bids.findIndex(row => row[0] <= spreadSell.orders.symbol2.price!);
-	(idx === -1) && (idx = 19);
-	grid.bids[idx][4] = fixUndefined(formatter, spreadSell.orders.symbol2.price);
+	grid.asks[spreadSell.orders.symbol1.idx][0] = fixUndefined(formatter, spreadSell.orders.symbol1.price);
+	grid.asks[spreadBuy.orders.symbol2.idx][4] = fixUndefined(formatter, spreadBuy.orders.symbol2.price);
+	grid.bids[spreadBuy.orders.symbol1.idx][0] = fixUndefined(formatter, spreadBuy.orders.symbol1.price);
+	grid.bids[spreadSell.orders.symbol2.idx][4] = fixUndefined(formatter, spreadSell.orders.symbol2.price);
 	return (
 		<CenterContainerTable grid={grid} />
 	)

@@ -54,10 +54,12 @@ export interface ISpreadPrices {
 		symbol1: {
 			price: number | undefined;
 			side: OrderSides | undefined;
+			idx: number;
 		},
 		symbol2: {
 			price: number | undefined;
 			side: OrderSides | undefined;
+			idx: number;
 		},
 	},
 }

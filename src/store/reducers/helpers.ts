@@ -56,10 +56,12 @@ const emptySpread = (percent: number) => {
 			symbol1: {
 				price: undefined,
 				side: undefined,
-			},
+				idx: 19,
+},
 			symbol2: {
 				price: undefined,
 				side: undefined,
+				idx: 19,
 			},
 		},
 	}

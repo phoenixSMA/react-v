@@ -1,6 +1,6 @@
 import { Dispatch, Middleware, MiddlewareAPI } from "redux";
 import { Actions, ActionTypes } from "../actions/types";
-import { IPricePercent, IState, ITradingPrices, OrderSides } from "../types";
+import { IPricePercent, IState, ITradingPrices, L2Data, OrderSides } from "../types";
 import { updateTradingPrices } from "../actions/actions";
 import { decAdjust } from "../../service/utils";
 
@@ -29,12 +29,16 @@ const tradingMiddleware: Middleware = ({getState}: MiddlewareAPI) => (next: Disp
 		const s2BidLimit = s1Bid - trading.spreadSell.level.price!;
 		trading.spreadBuy.orders.symbol1.side = OrderSides.Buy;
 		trading.spreadBuy.orders.symbol1.price = decAdjust(`floor`, s1BidLimit, -formatter);
+		trading.spreadBuy.orders.symbol1.idx = calcIdx(`bid`, trading.spreadBuy.orders.symbol1.price, symbol1.bids);
 		trading.spreadBuy.orders.symbol2.side = OrderSides.Sell;
 		trading.spreadBuy.orders.symbol2.price = decAdjust(`ceil`, s2AskLimit, -formatter);
+		trading.spreadBuy.orders.symbol2.idx = calcIdx(`ask`, trading.spreadBuy.orders.symbol2.price, symbol2.asks);
 		trading.spreadSell.orders.symbol1.side = OrderSides.Sell;
 		trading.spreadSell.orders.symbol1.price = decAdjust(`ceil`, s1AskLimit, -formatter);
+		trading.spreadSell.orders.symbol1.idx = calcIdx(`ask`, trading.spreadSell.orders.symbol1.price, symbol1.asks);
 		trading.spreadSell.orders.symbol2.side = OrderSides.Buy;
 		trading.spreadSell.orders.symbol2.price = decAdjust(`floor`, s2BidLimit, -formatter);
+		trading.spreadSell.orders.symbol2.idx = calcIdx(`bid`, trading.spreadSell.orders.symbol2.price, symbol2.bids);
 		trading.formatter = formatter;
 		next(updateTradingPrices(trading));
 	}
@@ -54,4 +58,15 @@ const calcPriceFromPercent = (percent: number, base: number, type: `floor` | `ro
 		price: decAdjust(type, percent * base / 100, -formatter),
 		percent: decAdjust('round', percent, -3),
 	};
+};
+
+const calcIdx = (side: `bid` | `ask`, price: number, data: L2Data): number => {
+	let idx: number;
+	if (side === `bid`) {
+		idx = data.findIndex(row => row[0] <= price);
+	} else {
+		idx = data.findIndex(row => row[0] >= price);
+	}
+	(idx === -1) && (idx = 19);
+	return idx;
 };
