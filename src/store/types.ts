@@ -38,27 +38,31 @@ export interface ITradingPrices {
 	sellMarket: IPricePercent;
 	buyMarket: IPricePercent;
 	spreadBO: IPricePercent;
-	spreadSell: ISpreadPrices;
-	spreadBuy: ISpreadPrices;
+	spreadLevels: ISpreadLevel[];
 	formatter: number,
 }
 
 export interface IPricePercent {
-	price: number | undefined;
+	price?: number | undefined;
 	percent: number | undefined;
 }
 
-export interface ISpreadPrices {
-	level: IPricePercent,
+export interface IOrderLevel extends IPricePercent {
+	side: TradeSides;
+	qty: number;
+}
+
+export interface ISpreadLevel {
+	level: IOrderLevel,
 	orders: {
 		symbol1: {
 			price: number | undefined;
-			side: OrderSides | undefined;
+			side: TradeSides | undefined;
 			idx: number;
 		},
 		symbol2: {
 			price: number | undefined;
-			side: OrderSides | undefined;
+			side: TradeSides | undefined;
 			idx: number;
 		},
 	},
@@ -79,7 +83,7 @@ export enum ConnectionStatus {
 	Error,
 }
 
-export enum OrderSides {
+export enum TradeSides {
 	Buy,
 	Sell,
 }

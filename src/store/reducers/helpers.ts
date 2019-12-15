@@ -4,9 +4,11 @@ import {
 	CloseLinePoint,
 	ConnectionStatus,
 	IContract,
+	IOrderLevel,
 	IPricePercent,
 	IState,
-	ISymbol
+	ISymbol,
+	TradeSides
 } from "../types";
 import { contracts } from "../../service/constants";
 import { data, options } from "../../components/chart3L/config";
@@ -46,24 +48,32 @@ const emptyPricePercent = (): IPricePercent => {
 	}
 };
 
-const emptySpread = (percent: number) => {
+const emptySpreadLevel = (level: IOrderLevel) => {
 	return {
-		level: {
-			price: undefined,
-			percent,
-		},
+		level,
 		orders: {
 			symbol1: {
 				price: undefined,
 				side: undefined,
 				idx: 19,
-},
+			},
 			symbol2: {
 				price: undefined,
 				side: undefined,
 				idx: 19,
 			},
 		},
+	}
+};
+
+export const emptyTrading = (formatter: number = 0) => {
+	return {
+		deltaAsks: emptyPricePercent(),
+		deltaBids: emptyPricePercent(),
+		buyMarket: emptyPricePercent(),
+		sellMarket: emptyPricePercent(),
+		spreadBO: emptyPricePercent(),
+		formatter,
 	}
 };
 
@@ -88,14 +98,11 @@ export const initialState = (): IState => {
 			options,
 		},
 		trading: {
-			deltaAsks: emptyPricePercent(),
-			deltaBids: emptyPricePercent(),
-			buyMarket: emptyPricePercent(),
-			sellMarket: emptyPricePercent(),
-			spreadBO: emptyPricePercent(),
-			spreadSell: emptySpread(sellLevel),
-			spreadBuy: emptySpread(buyLevel),
-			formatter: 0,
+			...emptyTrading(),
+			spreadLevels: [
+				emptySpreadLevel({side: TradeSides.Sell, percent: sellLevel, qty: 1}),
+				emptySpreadLevel({side: TradeSides.Buy, percent: buyLevel, qty: 1}),
+			],
 		},
 	}
 };
