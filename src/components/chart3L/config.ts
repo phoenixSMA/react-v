@@ -1,5 +1,6 @@
 import { ChartData } from "react-chartjs-2";
 import { ChartOptions } from "chart.js";
+import { TradeSides } from "../../store/types";
 
 export const data: ChartData<any> = {
 	datasets: [
@@ -138,5 +139,23 @@ export const options: ChartOptions = {
 			}
 		},
 		]
+	}
+};
+
+export const levelDataSet = (side: TradeSides) => {
+	const color = side === TradeSides.Buy ? `darkgreen` : `darkred`;
+	return {
+		type: `line`,
+		label: ``,
+		data: [],
+		borderColor: color,
+		backgroundColor: color,
+		fill: false,
+		lineTension: 0,
+		borderJoinStyle: 'round',
+		borderWidth: 1,
+		pointRadius: 0,
+		pointHoverRadius: 5,
+		yAxisID: 'Yaxis1'
 	}
 };
