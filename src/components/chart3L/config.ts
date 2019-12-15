@@ -5,6 +5,21 @@ export const data: ChartData<any> = {
 	datasets: [
 		{
 			type: `line`,
+			label: `Last Price`,
+			data: [],
+			borderColor: `cyan`,
+			backgroundColor: `cyan`,
+			fill: false,
+			lineTension: 0,
+			borderJoinStyle: 'round',
+			borderWidth: 1,
+			// borderDash: [2, 2],
+			pointRadius: 0,
+			pointHoverRadius: 5,
+			yAxisID: 'Yaxis2',
+		},
+		{
+			type: `line`,
 			label: ``,
 			data: [],
 			borderColor: `yellow`,
@@ -51,6 +66,9 @@ export const data: ChartData<any> = {
 export const options: ChartOptions = {
 	responsive: true,
 	maintainAspectRatio: false,
+	animation: {
+		duration: 0,
+	},
 	title: {
 		display: false,
 		text: ``,

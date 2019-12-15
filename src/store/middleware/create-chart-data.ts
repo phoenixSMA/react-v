@@ -15,17 +15,17 @@ export const createChartDataMiddleware: Middleware = ({getState}: MiddlewareAPI)
 		case Actions.SET_SYMBOL_CL: {
 			const symbol = action.meta === 1 ? symbol1 : symbol2;
 			next(setChartSymbolData(createSymbolChartData(symbol), action.meta));
-			next(setChartSpreadData(createSpreadChartData1(symbol1, symbol2, price)));
+			next(setChartSpreadData(createSpreadChartData(symbol1, symbol2, price)));
 			return;
 		}
 		case Actions.UPDATE_SYMBOL_CL: {
 			const symbol = action.meta === 1 ? symbol1 : symbol2;
 			next(setChartSymbolData(createSymbolChartData(symbol), action.meta));
-			next(setChartSpreadData(createSpreadChartData1(symbol1, symbol2, price)));
+			next(setChartSpreadData(createSpreadChartData(symbol1, symbol2, price)));
 			return;
 		}
 		case Actions.SET_CHART_VIEWMODE:
-			next(setChartSpreadData(createSpreadChartData1(symbol1, symbol2, price)));
+			next(setChartSpreadData(createSpreadChartData(symbol1, symbol2, price)));
 			return;
 	}
 };
@@ -37,8 +37,9 @@ const createSymbolChartData = (symbol: ISymbol): ChartTimePriceData => {
 	})
 };
 
-const createSpreadChartData1 = (symbol1: ISymbol, symbol2: ISymbol, price: boolean): ChartTimePriceData => {
-	const spreadData: ChartTimePriceData = [];
+const createSpreadChartData = (symbol1: ISymbol, symbol2: ISymbol, price: boolean): ChartTimePriceData[] => {
+	const spreadLine: ChartTimePriceData = [];
+	let spreadData: ChartTimePriceData = [];
 	const {formatter} = symbol1;
 	for (const point1 of symbol1.closeLine) {
 		const time = point1[0];
@@ -47,11 +48,16 @@ const createSpreadChartData1 = (symbol1: ISymbol, symbol2: ISymbol, price: boole
 			spreadData.push({x: time * 1000, y: (point1[1] - point2[1]).toFixed(formatter)});
 		}
 	}
-	if (price) {
-		return spreadData;
+	if (!price) {
+		const base = symbol1.closeLine[symbol1.closeLine.length - 1][1];
+		spreadData = spreadData.map<ChartTimePricePoint>((p) => {
+			return {x: p.x, y: ((p.y as unknown as number) / base * 100).toFixed(3)}
+		});
 	}
-	const base = symbol1.closeLine[symbol1.closeLine.length - 1][1];
-	return spreadData.map<ChartTimePricePoint>((p) => {
-		return {x: p.x, y: ((p.y as unknown as number) / base * 100).toFixed(3)}
-	});
+	if (spreadData.length){
+		const y = spreadData[spreadData.length - 1].y;
+		spreadLine.push({x: spreadData[0].x, y});
+		spreadLine.push({x: spreadData[spreadData.length - 1].x, y});
+	}
+	return [spreadLine, spreadData];
 };

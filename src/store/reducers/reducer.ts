@@ -19,18 +19,19 @@ const reducer = (
 						data: {
 							...state.chart.data,
 							datasets: [
+								{...state.chart.data.datasets[0]},
 								{
-									...state.chart.data.datasets[0],
+									...state.chart.data.datasets[1],
 									label: `${symbol1.name} - ${symbol2.name}`,
 									data: [],
 								},
 								{
-									...state.chart.data.datasets[1],
+									...state.chart.data.datasets[2],
 									label: `${symbol1.name}`,
 									data: [],
 								},
 								{
-									...state.chart.data.datasets[2],
+									...state.chart.data.datasets[3],
 									data: [],
 								}
 							]
@@ -45,17 +46,18 @@ const reducer = (
 						data: {
 							...state.chart.data,
 							datasets: [
+								{...state.chart.data.datasets[0]},
 								{
-									...state.chart.data.datasets[0],
+									...state.chart.data.datasets[1],
 									label: `${symbol1.name} - ${symbol2.name}`,
 									data: [],
 								},
 								{
-									...state.chart.data.datasets[1],
+									...state.chart.data.datasets[2],
 									data: [],
 								},
 								{
-									...state.chart.data.datasets[2],
+									...state.chart.data.datasets[3],
 									label: `${symbol2.name}`,
 									data: [],
 								}
@@ -101,11 +103,12 @@ const reducer = (
 								...state.chart.data,
 								datasets: [
 									state.chart.data.datasets[0],
+									state.chart.data.datasets[1],
 									{
-										...state.chart.data.datasets[1],
+										...state.chart.data.datasets[2],
 										data: [...action.payload],
 									},
-									state.chart.data.datasets[2],
+									state.chart.data.datasets[3],
 								]
 							}
 						}
@@ -120,8 +123,9 @@ const reducer = (
 								datasets: [
 									state.chart.data.datasets[0],
 									state.chart.data.datasets[1],
+									state.chart.data.datasets[2],
 									{
-										...state.chart.data.datasets[2],
+										...state.chart.data.datasets[3],
 										data: [...action.payload],
 									}
 								]
@@ -139,10 +143,14 @@ const reducer = (
 							datasets: [
 								{
 									...state.chart.data.datasets[0],
-									data: [...action.payload],
+									data: [...action.payload][0],
 								},
-								state.chart.data.datasets[1],
-								state.chart.data.datasets[2]
+								{
+									...state.chart.data.datasets[1],
+									data: [...action.payload][1],
+								},
+								state.chart.data.datasets[2],
+								state.chart.data.datasets[3]
 							]
 						}
 					}

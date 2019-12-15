@@ -57,7 +57,7 @@ export const setChartSymbolData = (data: ChartTimePriceData, symbol: number) => 
 	return {type: Actions.SET_CHART_SYMBOL_DATA, payload: data, meta: symbol}
 };
 
-export const setChartSpreadData = (data: ChartTimePriceData) => {
+export const setChartSpreadData = (data: ChartTimePriceData[]) => {
 	return {type: Actions.SET_CHART_SPREAD_DATA, payload: data}
 };
 

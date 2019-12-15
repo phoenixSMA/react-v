@@ -74,9 +74,9 @@ export const initialState = (): IState => {
 	const viewMode: string = localStorage.getItem(`viewMode`) || `price`;
 	const sellLevel = 0.2;
 	const buyLevel = -0.2;
-	data.datasets![0].label = `${contract1.name} - ${contract2.name}`;
-	data.datasets![1].label = contract1.name;
-	data.datasets![2].label = contract2.name;
+	data.datasets![1].label = `${contract1.name} - ${contract2.name}`;
+	data.datasets![2].label = contract1.name;
+	data.datasets![3].label = contract2.name;
 	return {
 		symbol1: Object.assign({}, emptySymbol, contract1),
 		symbol2: Object.assign({}, emptySymbol, contract2),
