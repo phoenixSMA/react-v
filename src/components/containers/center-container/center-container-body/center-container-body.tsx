@@ -52,31 +52,28 @@ const CenterContainerBody: React.FC<ICenterContainerBodyProps> = props => {
 		fixUndefined(3, deltaBids.percent, `%`),
 		`\u00A0`,
 	];
-	const sellLevels = spreadLevels.filter((spreadLevel) => spreadLevel.level.side === TradeSides.Sell);
-	for (let i = 0; i < sellLevels.length; i++) {
-		const sellLevel = sellLevels[i];
-		grid.asks[i + 2] = [
-			`\u00A0`,
-			fixUndefined(formatter, sellLevel.level.price),
-			`Sell Level`,
-			fixUndefined(3, sellLevel.level.percent, `%`),
-			`\u00A0`,
-		];
-		grid.asks[sellLevel.orders.symbol1.idx][0] = fixUndefined(formatter, sellLevel.orders.symbol1.price);
-		grid.bids[sellLevel.orders.symbol2.idx][4] = fixUndefined(formatter, sellLevel.orders.symbol2.price);
-	}
-	const buyLevels = spreadLevels.filter((spreadLevel) => spreadLevel.level.side === TradeSides.Buy);
-	for (let i = 0; i < buyLevels.length; i++) {
-		const buyLevel = buyLevels[i];
-		grid.bids[i + 2] = [
-			`\u00A0`,
-			fixUndefined(formatter, buyLevel.level.price),
-			`Sell Level`,
-			fixUndefined(3, buyLevel.level.percent, `%`),
-			`\u00A0`,
-		];
-		grid.bids[buyLevel.orders.symbol1.idx][0] = fixUndefined(formatter, buyLevel.orders.symbol1.price);
-		grid.asks[buyLevel.orders.symbol2.idx][4] = fixUndefined(formatter, buyLevel.orders.symbol2.price);
+	for (const side of [TradeSides.Buy, TradeSides.Sell]) {
+		const levels = spreadLevels.filter((spreadLevel) => spreadLevel.level.side === side);
+		const name = side === TradeSides.Buy ? `Buy Level` : `Sell Level`;
+		const gridSide = side === TradeSides.Buy ? grid.bids : grid.asks;
+		for (let i = 0; i < levels.length; i++) {
+			const level = levels[i];
+			const {price, percent} = level.level;
+			gridSide[i + 2] = [
+				`\u00A0`,
+				fixUndefined(formatter, price),
+				name,
+				fixUndefined(3, percent, `%`),
+				`\u00A0`,
+			];
+			if (side===TradeSides.Buy) {
+				grid.bids[level.orders.symbol1.idx][0] = fixUndefined(formatter, level.orders.symbol1.price);
+				grid.asks[level.orders.symbol2.idx][4] = fixUndefined(formatter, level.orders.symbol2.price);
+			} else {
+				grid.bids[level.orders.symbol2.idx][4] = fixUndefined(formatter, level.orders.symbol2.price);
+				grid.asks[level.orders.symbol1.idx][0] = fixUndefined(formatter, level.orders.symbol1.price);
+			}
+		}
 	}
 	return (
 		<CenterContainerTable grid={grid} />
