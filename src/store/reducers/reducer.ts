@@ -158,6 +158,11 @@ const reducer = (
 			case Actions.UPDATE_TRADING_PRICES:
 				const trading = JSON.parse(JSON.stringify(action.payload));
 				return {...state, trading};
+			case Actions.ADD_LOG_MESSAGE:
+				let {log} = state;
+				log = JSON.parse(JSON.stringify(log));
+				log.unshift(action.payload);
+				return {...state, log};
 			default:
 				return state;
 		}

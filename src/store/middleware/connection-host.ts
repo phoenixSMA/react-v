@@ -1,6 +1,7 @@
-import { BidAskData, CloseLineData, CloseLinePoint, ConnectionStatus, IState } from "../types";
+import { BidAskData, CloseLineData, CloseLinePoint, ConnectionStatus, IState, LogTypes } from "../types";
 import { Dispatch, Middleware, MiddlewareAPI } from "redux";
 import {
+	addLogMessage,
 	changeConnectionStatus,
 	setConnectionStatus,
 	setSymbolCL,
@@ -53,6 +54,13 @@ const connectionHostMiddleware: Middleware = ({getState, dispatch}: MiddlewareAP
 							period,
 							handler: streamHandler,
 						});
+						if ((symbol === symbol1) || (symbol === symbol2 && symbol1.exchange !== symbol2.exchange)) {
+							next(addLogMessage({
+								time: Date.now(),
+								type: LogTypes.Success,
+								message: `${symbol.exchange} websocket connected`
+							}))
+						}
 					}
 				}
 				if (openedWebsockets[0].status === WebsocketStatus.Opened && openedWebsockets[1].status === WebsocketStatus.Opened) {
@@ -63,8 +71,19 @@ const connectionHostMiddleware: Middleware = ({getState, dispatch}: MiddlewareAP
 				openedWebsockets = [];
 				if (error) {
 					// todo обработать разрыв соединения - реконнесе
-					console.log(`${new Date().toLocaleString()}: statusHandler > disconnected: error`);
+					console.log(`${new Date().toLocaleString()}: statusHandler > ${exchange} disconnected: error`);
+					next(addLogMessage({
+						time: Date.now(),
+						type: LogTypes.Error,
+						message: `${exchange} disconnected`,
+					}));
 					dispatch(changeConnectionStatus());
+				} else {
+					next(addLogMessage({
+						time: Date.now(),
+						type: LogTypes.Info,
+						message: `${exchange} disconnected`,
+					}));
 				}
 			}
 		};
@@ -116,6 +135,11 @@ const connectionHostMiddleware: Middleware = ({getState, dispatch}: MiddlewareAP
 					} else {
 						next(setConnectionStatus(ConnectionStatus.Connecting));
 					}
+					next(addLogMessage({
+						time: Date.now(),
+						type: LogTypes.Info,
+						message: `Opening ${symbol1.exchange} websocket`
+					}));
 					const websocketClass = websocketByExchange(symbol1.exchange);
 					let websocket = new websocketClass(false);
 					websocket.open(statusHandler);
@@ -125,6 +149,11 @@ const connectionHostMiddleware: Middleware = ({getState, dispatch}: MiddlewareAP
 					if (symbol2.exchange !== symbol1.exchange) {
 						const websocketClass = websocketByExchange(symbol1.exchange);
 						websocket = new websocketClass(false);
+						next(addLogMessage({
+							time: Date.now(),
+							type: LogTypes.Info,
+							message: `Opening ${symbol2.exchange} websocket`
+						}));
 						websocket.open(statusHandler);
 					}
 					openedWebsockets.push(websocket);

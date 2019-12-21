@@ -1,7 +1,59 @@
+@import "../../../components/app/scss-vars";
+
 .log-container {
   display: flex;
   flex-direction: column;
   border-right: 2px solid darkgray;
   min-width: 40%;
   flex-grow: 1;
+  overflow: hidden;
+
+  .message {
+    color: $main-color;
+  }
+
+  .info {
+    color: yellow;
+  }
+
+  .error {
+    color: red;
+  }
+
+  .success {
+    color: green;
+  }
+
+  .warning {
+    color: orange;
+  }
+
+  .separator {
+    height: 5px;
+    color: $background-color;
+    line-height: 3px;
+    //background-color: orangered;
+  }
+
+  .log-body {
+    height: 100%;
+    overflow: auto;
+    flex-grow: 1;
+    padding: 0 10px;
+    color: $main-color;
+
+    div.log-row {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .time {
+      white-space: nowrap;
+    }
+
+    div.log-row-item {
+      display: inline-block;
+      margin-right: 10px;
+    }
+  }
 }

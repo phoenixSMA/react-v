@@ -36,8 +36,9 @@ export interface IState {
 		viewMode: string;
 		data: ChartData<any>;
 		options: ChartOptions;
-	}
+	};
 	trading: ITradingPrices;
+	log: ILogMessage[];
 }
 
 export interface ITradingPrices {
@@ -47,7 +48,7 @@ export interface ITradingPrices {
 	buyMarket: IPricePercent;
 	spreadBO: IPricePercent;
 	spreadLevels: ISpreadLevel[];
-	formatter: number,
+	formatter: number;
 }
 
 export interface IPricePercent {
@@ -67,13 +68,13 @@ export interface ISpreadLevel {
 			price: number | undefined;
 			side: TradeSides | undefined;
 			idx: number;
-		},
+		};
 		symbol2: {
 			price: number | undefined;
 			side: TradeSides | undefined;
 			idx: number;
-		},
-	},
+		};
+	};
 }
 
 export enum ConnectionStatus {
@@ -88,3 +89,16 @@ export enum TradeSides {
 	Sell,
 }
 
+export enum LogTypes {
+	Error,
+	Success,
+	Warning,
+	Info,
+	Message,
+}
+
+export interface ILogMessage {
+	type: LogTypes;
+	time: number;
+	message: string;
+}

@@ -4,6 +4,7 @@ import {
 	CloseLinePoint,
 	ConnectionStatus,
 	IContract,
+	ILogMessage,
 	IOrderLevel,
 	IPricePercent,
 	IState,
@@ -104,5 +105,18 @@ export const initialState = (): IState => {
 				emptySpreadLevel({side: TradeSides.Buy, percent: buyLevel, qty: 1}),
 			],
 		},
+		log: [],
 	}
+};
+
+const generateLog = (count: number = 10): ILogMessage[] => {
+	const output = [];
+	for (let i = 0; i < count; i++) {
+		output.push({
+			type: Math.floor(Math.random() * 5),
+			time: Date.now() + i * 1000 * 55 * 7,
+			message: `Message ${i} jsllllll jssssssssssssssss ssssssj k;nbjkln oe2no23in x2oini [x2ninxpi2[xm[mx[2om ikxnoos2xox2n hned kbcekjbcei jhdbidnbkjnb kjbljbjk;ln nojnpjnpoi;n  jnnpoon nonononononononononononoon`,
+		})
+	}
+	return output;
 };
