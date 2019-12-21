@@ -1,6 +1,6 @@
 import { Dispatch, Middleware, MiddlewareAPI } from "redux";
 import { Actions, ActionTypes } from "../actions/types";
-import { IPricePercent, ISpreadLevel, IState, ITradingPrices, L2Data, TradeSides } from "../types";
+import { IPricePercent, ISpreadLevel, IState, ITradingPrices, Level2Data, TradeSides } from "../types";
 import { updateTradingPrices } from "../actions/actions";
 import { decAdjust } from "../../service/utils";
 import { emptyTrading } from "../reducers/helpers";
@@ -37,7 +37,7 @@ const calcPriceFromPercent = (percent: number, base: number, type: `floor` | `ro
 	};
 };
 
-const calcIdx = (side: `bid` | `ask`, price: number, data: L2Data): number => {
+const calcIdx = (side: `bid` | `ask`, price: number, data: Level2Data): number => {
 	let idx: number;
 	if (side === `bid`) {
 		idx = data.findIndex(row => row[0] <= price);
@@ -50,12 +50,12 @@ const calcIdx = (side: `bid` | `ask`, price: number, data: L2Data): number => {
 
 interface ICalcTradingParams {
 	symbol1: {
-		asks: L2Data;
-		bids: L2Data;
+		asks: Level2Data;
+		bids: Level2Data;
 	};
 	symbol2: {
-		asks: L2Data;
-		bids: L2Data;
+		asks: Level2Data;
+		bids: Level2Data;
 	};
 	spreadLevels: ISpreadLevel[];
 	formatter: number;

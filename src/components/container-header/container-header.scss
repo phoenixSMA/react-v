@@ -1,0 +1,10 @@
+@import "../../components/app/scss-vars";
+
+.container-header {
+  margin: 0 5px;
+  color: $main-color;
+  background-color: $background-color;
+  flex-grow: 0;
+  border-bottom: 1px solid $main-color;
+  padding: 3px 10px;
+}

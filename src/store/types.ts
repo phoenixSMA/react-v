@@ -1,19 +1,27 @@
 import { ChartData } from "react-chartjs-2";
 import { ChartOptions } from "chart.js";
 
-type L2Row = [number, number];
+type Level2Row = [number, number];
 
-export type L2Data = L2Row[];
+export type Level2Data = Level2Row[];
 
 export type CloseLinePoint = [number, number];
 
 export type CloseLineData = CloseLinePoint[];
 
-export type BidAskData = { asks: L2Data, bids: L2Data };
+export type BidAskData = { asks: Level2Data, bids: Level2Data };
+
+export interface IContract {
+	text: string;
+	name: string;
+	underlying: string;
+	exchange: string;
+	formatter: number;
+}
 
 export interface ISymbol extends IContract {
-	asks: L2Data;
-	bids: L2Data;
+	asks: Level2Data;
+	bids: Level2Data;
 	closeLine: CloseLineData;
 }
 
@@ -66,14 +74,6 @@ export interface ISpreadLevel {
 			idx: number;
 		},
 	},
-}
-
-export interface IContract {
-	text: string;
-	name: string;
-	underlying: string;
-	exchange: string;
-	formatter: number;
 }
 
 export enum ConnectionStatus {
