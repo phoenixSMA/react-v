@@ -59,19 +59,12 @@ const CenterContainerBody: React.FC<ICenterContainerBodyProps> = props => {
 		for (let i = 0; i < levels.length; i++) {
 			const level = levels[i];
 			const { price, percent } = level.level;
-			gridSide[i + 2] = [
-				`\u00A0`,
-				fixUndefined(formatter, price),
-				name,
-				fixUndefined(3, percent, `%`),
-				`\u00A0`,
-			];
+			gridSide[i + 2][1] = fixUndefined(formatter, price);
+			gridSide[i + 2][2] = name;
+			gridSide[i + 2][3] = fixUndefined(3, percent, `%`);
 			if (side === TradeSides.Buy) {
 				grid.bids[level.orders.symbol1.idx][0] = fixUndefined(formatter, level.orders.symbol1.price);
 				grid.asks[level.orders.symbol2.idx][4] = fixUndefined(formatter, level.orders.symbol2.price);
-				// if (grid.asks[level.orders.symbol2.idx][4] === '\u00A0') {
-				// 	console.log('Oops ', level.orders.symbol2.price);
-				// }
 			} else {
 				grid.bids[level.orders.symbol2.idx][4] = fixUndefined(formatter, level.orders.symbol2.price);
 				grid.asks[level.orders.symbol1.idx][0] = fixUndefined(formatter, level.orders.symbol1.price);
