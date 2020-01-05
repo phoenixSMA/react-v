@@ -78,8 +78,8 @@ export const emptyTrading = (formatter: number = 0) => {
 };
 
 export const initialState = (): IState => {
-	const contract1: IContract = contracts.find(({name}) => name === localStorage.getItem(`symbol1`)) || contracts[0];
-	const contract2: IContract = contracts.find(({name}) => name === localStorage.getItem(`symbol2`)) || contracts[1];
+	const contract1: IContract = contracts.find(({ name }) => name === localStorage.getItem(`symbol1`)) || contracts[0];
+	const contract2: IContract = contracts.find(({ name }) => name === localStorage.getItem(`symbol2`)) || contracts[1];
 	const period: ChartPeriods = localStorage.getItem(`period`) as ChartPeriods || `M1`;
 	const viewMode: string = localStorage.getItem(`viewMode`) || `price`;
 	const sellLevel = 0.2;
@@ -100,8 +100,8 @@ export const initialState = (): IState => {
 		trading: {
 			...emptyTrading(),
 			spreadLevels: [
-				emptySpreadLevel({side: TradeSides.Sell, percent: sellLevel, qty: 1}),
-				emptySpreadLevel({side: TradeSides.Buy, percent: buyLevel, qty: 1}),
+				emptySpreadLevel({ side: TradeSides.Sell, percent: sellLevel, qty: 1 }),
+				emptySpreadLevel({ side: TradeSides.Buy, percent: buyLevel, qty: 1 }),
 			],
 		},
 		log: [],
