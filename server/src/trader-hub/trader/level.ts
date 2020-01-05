@@ -1,10 +1,9 @@
-import { prop} from "@typegoose/typegoose";
+import { prop } from "@typegoose/typegoose";
 import { TradeSides } from "../../../../src/store/types";
 
 export enum LevelStatus {
 	Idle = 'IDLE',
 	Opening = 'OPENING',
-	Opened = 'OPENED',
 	Closing = 'CLOSING',
 }
 
@@ -13,6 +12,8 @@ export class Level {
 	_id: string;
 	@prop()
 	side: TradeSides;
+	@prop()
+	qty: number;
 	@prop()
 	enter: number;
 	@prop()

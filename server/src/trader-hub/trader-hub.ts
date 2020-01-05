@@ -1,6 +1,7 @@
 import { Trader, TraderModel } from "./trader/trader";
 import { Socket } from 'socket.io';
 import { DocumentType } from "@typegoose/typegoose";
+import { IOrderLevel } from "../../../src/store/types";
 
 export class TraderHub {
 	private traders: Trader[] = [];
@@ -38,7 +39,8 @@ export class TraderHub {
 		}
 	}
 
-	addClient(_id: string, socket: Socket) {
+
+	addClient(_id: string, socket: Socket): { _id: string; levels: IOrderLevel[] } {
 		this.removeClient(socket);
 		let trader = this.traders.find(t => t._id === _id);
 		if (!trader) {
@@ -46,6 +48,10 @@ export class TraderHub {
 		}
 		trader.clients.push(socket);
 		this.logTraders('addClient');
+		return {
+			_id: trader._id,
+			levels: trader.getClientsLevels(),
+		}
 	}
 
 	private static consoleLog(msg: string = '', ...args: any) {

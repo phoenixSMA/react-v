@@ -8,7 +8,6 @@ import {
 	IPricePercent,
 	IState,
 	ISymbol,
-	TradeSides
 } from "../types";
 import { contracts } from "../../service/constants";
 import { data, options } from "../../components/chart3L/config";
@@ -48,7 +47,7 @@ const emptyPricePercent = (): IPricePercent => {
 	}
 };
 
-const emptySpreadLevel = (level: IOrderLevel) => {
+export const emptySpreadLevel = (level: IOrderLevel) => {
 	return {
 		level,
 		orders: {
@@ -82,8 +81,6 @@ export const initialState = (): IState => {
 	const contract2: IContract = contracts.find(({ name }) => name === localStorage.getItem(`symbol2`)) || contracts[1];
 	const period: ChartPeriods = localStorage.getItem(`period`) as ChartPeriods || `M1`;
 	const viewMode: string = localStorage.getItem(`viewMode`) || `price`;
-	const sellLevel = 0.2;
-	const buyLevel = -0.2;
 	data.datasets![1].label = `${contract1.name} - ${contract2.name}`;
 	data.datasets![2].label = contract1.name;
 	data.datasets![3].label = contract2.name;
@@ -99,10 +96,7 @@ export const initialState = (): IState => {
 		},
 		trading: {
 			...emptyTrading(),
-			spreadLevels: [
-				emptySpreadLevel({ side: TradeSides.Sell, percent: sellLevel, qty: 1 }),
-				emptySpreadLevel({ side: TradeSides.Buy, percent: buyLevel, qty: 1 }),
-			],
+			spreadLevels: [],
 		},
 		log: [],
 	}

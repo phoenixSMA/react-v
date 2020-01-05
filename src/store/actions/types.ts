@@ -5,7 +5,7 @@ import {
 	CloseLineData,
 	CloseLinePoint,
 	ConnectionStatus,
-	IContract, ILogMessage,
+	IContract, ILogMessage, IOrderLevel,
 	ITradingPrices
 } from "../types";
 import { ChartTimePriceData } from "../../components/chart3L/types";
@@ -25,6 +25,7 @@ export enum Actions {
 	SET_CHART_SPREAD_DATA = `SET_CHART_SPREAD_DATA`,
 	UPDATE_TRADING_PRICES = `UPDATE_TRADING_PRICES`,
 	ADD_LOG_MESSAGE = `ADD_LOG_MESSAGE`,
+	SET_TRADING_LEVELS = `SET_TRADING_LEVELS`,
 }
 
 export interface SetSymbolContract {
@@ -101,6 +102,11 @@ export interface AddLogMessage {
 	payload: ILogMessage;
 }
 
+export interface SetTradingLevels {
+	type: typeof Actions.SET_TRADING_LEVELS,
+	payload: IOrderLevel[],
+}
+
 export type  ActionTypes = SetSymbolContract
 	| ChangeConnectionStatus
 	| SetConnectionStatus
@@ -114,4 +120,5 @@ export type  ActionTypes = SetSymbolContract
 	| SetChartSymbolData
 	| SetChartSpreadData
 	| UpdateTradingPrices
-	| AddLogMessage;
+	| AddLogMessage
+	| SetTradingLevels;

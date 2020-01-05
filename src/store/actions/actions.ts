@@ -6,6 +6,7 @@ import {
 	ConnectionStatus,
 	IContract,
 	ILogMessage,
+	IOrderLevel,
 	ITradingPrices
 } from "../types";
 import { contracts } from "../../service/constants";
@@ -16,6 +17,7 @@ import {
 	SetChartViewMode,
 	SetSymbolCL,
 	SetSymbolContract,
+	SetTradingLevels,
 	UpdateSymbolCL,
 	UpdateSymbolL2,
 	UpdateTradingPrices
@@ -27,11 +29,12 @@ export const setSymbolContract = (name: string, left: boolean): SetSymbolContrac
 	return {
 		type: Actions.SET_SYMBOL_CONTRACT,
 		payload: contract,
-		left}
+		left
+	}
 };
 
 export const changeConnectionStatus = (): ChangeConnectionStatus => {
-	return {type: Actions.CHANGE_CONNECTION_STATUS}
+	return { type: Actions.CHANGE_CONNECTION_STATUS }
 };
 
 export const setConnectionStatus = (payload: ConnectionStatus) => {
@@ -79,7 +82,7 @@ export const setChartViewMode = (payload: string): SetChartViewMode => {
 	}
 };
 
-export const setChartSymbolData = (payload: ChartTimePriceData,  meta: 1 | 2) => {
+export const setChartSymbolData = (payload: ChartTimePriceData, meta: 1 | 2) => {
 	return {
 		type: Actions.SET_CHART_SYMBOL_DATA,
 		payload,
@@ -104,6 +107,13 @@ export const updateTradingPrices = (payload: ITradingPrices): UpdateTradingPrice
 export const addLogMessage = (payload: ILogMessage): AddLogMessage => {
 	return {
 		type: Actions.ADD_LOG_MESSAGE,
+		payload,
+	}
+};
+
+export const setTradingLevels = (payload: IOrderLevel[]): SetTradingLevels => {
+	return {
+		type: Actions.SET_TRADING_LEVELS,
 		payload,
 	}
 };

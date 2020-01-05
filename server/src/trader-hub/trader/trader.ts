@@ -2,6 +2,7 @@ import { arrayProp, getModelForClass, prop } from "@typegoose/typegoose";
 import { Socket } from 'socket.io';
 import { createDefaultLevels, Level } from "./level";
 import { Order } from "./order";
+import { IOrderLevel } from "../../../../src/store/types";
 
 export class Trader {
 	@prop()
@@ -35,6 +36,15 @@ export class Trader {
 		});
 		this.orders = orders || [];
 		this.clients = [];
+	}
+
+	getClientsLevels(): IOrderLevel[] {
+		const buyLevel = this.levels.find(({ _id }) => _id === 'BUY-0');
+		const sellLevel = this.levels.find(({ _id }) => _id === 'SELL-0');
+		return [
+			{ qty: buyLevel.qty, side: buyLevel.side, percent: buyLevel.enter },
+			{ qty: sellLevel.qty, side: sellLevel.side, percent: sellLevel.enter },
+		];
 	}
 }
 
