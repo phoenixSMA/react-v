@@ -3,7 +3,7 @@ import "./center-container-table.scss";
 
 interface ICenterContainerTableGrid {
 	grid: {
-		asks: (number | string | null)[][];
+		asks: (number | string)[][];
 		center: (number | string | null) [];
 		bids: (number | string | null) [][];
 	};
