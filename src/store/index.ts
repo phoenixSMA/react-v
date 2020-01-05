@@ -5,6 +5,7 @@ import connectionHostMiddleware from "./middleware/connection-host";
 import { settingsMiddleware } from "./middleware/settings";
 import { createChartDataMiddleware } from "./middleware/create-chart-data";
 import tradingMiddleware from "./middleware/trading";
+import {socketMiddleware} from "./middleware/socket";
 
 const configureStore = () => {
 	return createStore(reducer,
@@ -13,7 +14,8 @@ const configureStore = () => {
 				settingsMiddleware,
 				connectionHostMiddleware,
 				createChartDataMiddleware,
-				tradingMiddleware)))
+				tradingMiddleware,
+				socketMiddleware)))
 };
 
 export default configureStore;

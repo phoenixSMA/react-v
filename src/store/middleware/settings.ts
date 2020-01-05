@@ -9,6 +9,7 @@ export const settingsMiddleware: Middleware = ({dispatch}: MiddlewareAPI) => (ne
 			const {name} = action.payload;
 			const symbolSide = action.left ? `symbol1` : `symbol2`;
 			localStorage.setItem(symbolSide, name);
+			next(action);
 			if (action.left) {
 				dispatch(setSymbolContract(findPair(name), !action.left));
 			}
@@ -17,15 +18,18 @@ export const settingsMiddleware: Middleware = ({dispatch}: MiddlewareAPI) => (ne
 		case Actions.SET_CHART_PERIOD: {
 			const period = action.payload;
 			localStorage.setItem(`period`, period);
+			next(action);
 			break;
 		}
 		case Actions.SET_CHART_VIEWMODE: {
 			const viewMode = action.payload;
 			localStorage.setItem(`viewMode`, viewMode);
+			next(action);
 			break;
 		}
+		default:
+			next(action);
 	}
-	next(action);
 };
 
 const findPair = (name: string): string => {

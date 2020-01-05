@@ -19,8 +19,12 @@
     "tslint": "^5.20.1"
   },
   "dependencies": {
+    "@typegoose/typegoose": "^6.2.0",
+    "@types/mongoose": "^5.5.38",
     "@types/socket.io": "^2.1.4",
     "dotenv": "^8.2.0",
-    "socket.io": "^2.3.0"
+    "mongoose": "^5.8.4",
+    "socket.io": "^2.3.0",
+    "ws": "^7.2.1"
   }
 }

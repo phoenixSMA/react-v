@@ -4,7 +4,6 @@ import {
 	CloseLinePoint,
 	ConnectionStatus,
 	IContract,
-	ILogMessage,
 	IOrderLevel,
 	IPricePercent,
 	IState,
@@ -80,7 +79,7 @@ export const emptyTrading = (formatter: number = 0) => {
 
 export const initialState = (): IState => {
 	const contract1: IContract = contracts.find(({name}) => name === localStorage.getItem(`symbol1`)) || contracts[0];
-	const contract2: IContract = contracts.find(({name}) => name === localStorage.getItem(`symbol2`)) || contracts[0];
+	const contract2: IContract = contracts.find(({name}) => name === localStorage.getItem(`symbol2`)) || contracts[1];
 	const period: ChartPeriods = localStorage.getItem(`period`) as ChartPeriods || `M1`;
 	const viewMode: string = localStorage.getItem(`viewMode`) || `price`;
 	const sellLevel = 0.2;
@@ -107,16 +106,4 @@ export const initialState = (): IState => {
 		},
 		log: [],
 	}
-};
-
-const generateLog = (count: number = 10): ILogMessage[] => {
-	const output = [];
-	for (let i = 0; i < count; i++) {
-		output.push({
-			type: Math.floor(Math.random() * 5),
-			time: Date.now() + i * 1000 * 55 * 7,
-			message: `Message ${i} jsllllll jssssssssssssssss ssssssj k;nbjkln oe2no23in x2oini [x2ninxpi2[xm[mx[2om ikxnoos2xox2n hned kbcekjbcei jhdbidnbkjnb kjbljbjk;ln nojnpjnpoi;n  jnnpoon nonononononononononononoon`,
-		})
-	}
-	return output;
 };
