@@ -1,5 +1,6 @@
-import {ChartData} from "react-chartjs-2";
-import {ChartOptions} from "chart.js";
+import { ChartData } from "react-chartjs-2";
+import { ChartOptions } from "chart.js";
+import { TraderStatus } from "../common/trader-status";
 
 type Level2Row = [number, number];
 
@@ -25,7 +26,7 @@ export interface ISymbol extends IContract {
     closeLine: CloseLineData;
 }
 
-export type ChartPeriods = `M1` | `M5` | `M15` | `M30` | `H1` | `H4` | `D1`;
+export type ChartPeriods = 'M1' | 'M5' | 'M15' | 'M30' | 'H1' | 'H4' | 'D1';
 
 export interface IState {
     symbol1: ISymbol;
@@ -37,11 +38,11 @@ export interface IState {
         data: ChartData<any>;
         options: ChartOptions;
     };
-    trading: ITradingPrices;
+    trading: ITrading;
     log: ILogMessage[];
 }
 
-export interface ITradingPrices {
+export interface ITrading {
     deltaAsks: IPricePercent;
     deltaBids: IPricePercent;
     sellMarket: IPricePercent;
@@ -49,6 +50,7 @@ export interface ITradingPrices {
     spreadBO: IPricePercent;
     spreadLevels: ISpreadLevel[];
     formatter: number;
+    traderStatus: TraderStatus;
 }
 
 export interface IPricePercent {
@@ -76,10 +78,10 @@ export interface ISpreadLevel {
 }
 
 export enum ConnectionStatus {
-    Disconnected,
-    Connecting,
-    Connected,
-    Error,
+    Disconnected = 'Disconnected',
+    Connecting = 'Connecting',
+    Connected = 'Connected',
+    Error = 'Error',
 }
 
 export enum TradeSides {

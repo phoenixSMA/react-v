@@ -1,59 +1,59 @@
 @import "../../../components/app/scss-vars";
 
 .log-container {
-  display: flex;
-  flex-direction: column;
-  border-right: 2px solid darkgray;
-  min-width: 40%;
-  flex-grow: 1;
-  overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	border-right: 2px solid darkgray;
+	min-width: 40%;
+	flex-grow: 1;
+	overflow: hidden;
 
-  .message {
-    color: $main-color;
-  }
+	.message {
+		color: $main-color;
+	}
 
-  .info {
-    color: goldenrod;
-  }
+	.info {
+		color: gold;
+	}
 
-  .error {
-    color: red;
-  }
+	.error {
+		color: red;
+	}
 
-  .success {
-    color: green;
-  }
+	.success {
+		color: green;
+	}
 
-  .warning {
-    color: orange;
-  }
+	.warning {
+		color: darkorange;
+	}
 
-  .separator {
-    height: 5px;
-    color: $background-color;
-    line-height: 3px;
-    //background-color: orangered;
-  }
+	.separator {
+		height: 5px;
+		color: $background-color;
+		line-height: 3px;
+		//background-color: orangered;
+	}
 
-  .log-body {
-    height: 100%;
-    overflow: auto;
-    flex-grow: 1;
-    padding: 0 10px;
-    color: $main-color;
+	.log-body {
+		height: 100%;
+		overflow: auto;
+		flex-grow: 1;
+		padding: 0 10px;
+		color: $main-color;
 
-    div.log-row {
-      display: flex;
-      flex-direction: row;
-    }
+		div.log-row {
+			display: flex;
+			flex-direction: row;
+		}
 
-    .time {
-      white-space: nowrap;
-    }
+		.time {
+			white-space: nowrap;
+		}
 
-    div.log-row-item {
-      display: inline-block;
-      margin-right: 10px;
-    }
-  }
+		div.log-row-item {
+			display: inline-block;
+			margin-right: 10px;
+		}
+	}
 }

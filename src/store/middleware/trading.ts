@@ -1,9 +1,9 @@
 import { Dispatch, Middleware, MiddlewareAPI } from "redux";
 import { Actions, ActionTypes } from "../actions/types";
-import { IPricePercent, ISpreadLevel, IState, ITradingPrices, Level2Data, TradeSides } from "../types";
+import { IPricePercent, ISpreadLevel, IState, ITrading, Level2Data, TradeSides } from "../types";
 import { updateTradingPrices } from "../actions/actions";
 import { decAdjust } from "../../service/utils";
-import { emptyTrading } from "../reducers/helpers";
+import { initTrading } from "../reducers/helpers";
 
 const tradingMiddleware: Middleware = ({getState}: MiddlewareAPI) => (next: Dispatch) => (action: ActionTypes) => {
 	next(action);
@@ -61,10 +61,10 @@ interface ICalcTradingParams {
 	formatter: number;
 }
 
-export const calcTradingPrices = (params: ICalcTradingParams): ITradingPrices => {
+export const calcTradingPrices = (params: ICalcTradingParams): ITrading => {
 	const {symbol1, symbol2, spreadLevels, formatter} = params;
-	const trading: ITradingPrices = {
-		...emptyTrading(formatter),
+	const trading: ITrading = {
+		...initTrading(formatter),
 		spreadLevels,
 	};
 	const s1Ask = symbol1.asks[0][0];

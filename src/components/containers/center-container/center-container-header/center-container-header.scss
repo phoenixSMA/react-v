@@ -1,34 +1,38 @@
-.center-container-header td {
-  padding: 2px 10px;
-  text-align: left;
+.center-container-header {
+	td {
+		padding: 2px 10px;
+		text-align: left;
+	}
+
+	td:nth-child(odd), tr.bordered td {
+		border-bottom: 1px solid darkgray;
+	}
+
+	button {
+		border-radius: 5px;
+		border: none;
+		color: #eeeeee;
+		cursor: pointer;
+		outline: none;
+		height: 24px;
+		margin: 5px 0;
+		padding: 0 10px;
+		width: 90px;
+	}
+
+	button:hover {
+		color: aqua;
+	}
+
+	button:disabled {
+		color: darkred;
+		font-style: italic;
+		cursor: default;
+	}
+
+	.status-field {
+		width: 75px;
+	}
 }
 
-.center-container-header td:first-child {
-  border-bottom: 1px solid darkgray;
-}
 
-.center-container-header button {
-  border-radius: 5px;
-  border: none;
-  color: #eeeeee;
-  cursor: pointer;
-  outline: none;
-  height: 24px;
-  margin: 5px 0;
-  padding: 0 10px;
-  width: 90px;
-}
-
-.center-container-header button:hover {
-  color: aqua;
-}
-
-.center-container-header button:disabled {
-  color: darkred;
-  font-style: italic;
-  cursor: default;
-}
-
-.center-container-header .status-field {
-  width: 75px;
-}

@@ -1,5 +1,5 @@
 import React from "react";
-import { IState, ISymbol, ITradingPrices, TradeSides } from "../../../../store/types";
+import { IState, ISymbol, ITrading, TradeSides } from "../../../../store/types";
 import { connect } from "react-redux";
 import { CenterContainerTable } from "./center-container-table";
 import { createEmptyGridPart, fixUndefined } from "./utils";
@@ -7,7 +7,7 @@ import { createEmptyGridPart, fixUndefined } from "./utils";
 interface ICenterContainerBodyProps {
 	symbol1: ISymbol,
 	symbol2: ISymbol,
-	trading: ITradingPrices;
+	trading: ITrading;
 }
 
 const CenterContainerBody: React.FC<ICenterContainerBodyProps> = props => {
