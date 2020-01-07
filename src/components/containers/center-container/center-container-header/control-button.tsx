@@ -40,7 +40,6 @@ const ControlButton: React.FunctionComponent<IControlButtonProps> = (props) => {
             text={text}
             styles={{ backgroundColor: getColorByStatus(status) }}
             onClick={() => {
-                console.log(clickAction);
                 clickAction();
             }}
             disabled={status === ConnectionStatus.Connecting}

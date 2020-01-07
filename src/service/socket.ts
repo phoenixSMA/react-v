@@ -35,7 +35,6 @@ class Socket {
 
     changeTraderStatus() {
         this.socket.emit(ClientEvents.CHANGE_TRADER_STATUS, (status: TraderStatus) => {
-            console.log('changeTraderStatus callback ', status);
             store.dispatch(addLogMessage({
                 type: LogTypes.Info,
                 time: Date.now(),

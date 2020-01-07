@@ -66,7 +66,7 @@ export const initSpreadLevel = (level: IOrderLevel) => {
     }
 };
 
-export const initTrading = (formatter: number = 0) => {
+export const initTrading = (formatter: number = 0, traderStatus: TraderStatus = TraderStatus.Idle) => {
     return {
         deltaAsks: initPricePercent(),
         deltaBids: initPricePercent(),
@@ -75,7 +75,7 @@ export const initTrading = (formatter: number = 0) => {
         spreadBO: initPricePercent(),
         formatter,
         spreadLevels: [],
-        traderStatus: TraderStatus.Idle,
+        traderStatus,
     }
 };
 
