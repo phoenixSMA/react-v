@@ -2,7 +2,7 @@ import io from "socket.io-client";
 import { ClientEvents, ServerEvents } from "../common/socket-events";
 import { store } from "../index";
 import { addLogMessage, setTraderStatus, setTradingLevels } from "../store/actions/actions";
-import { IOrderLevel, IState, LogTypes } from "../store/types";
+import { IContract, IOrderLevel, IState, LogTypes } from "../store/types";
 import { TraderStatus } from "../common/trader-status";
 
 class Socket {
@@ -21,8 +21,11 @@ class Socket {
     setTrader() {
         const state: IState = store.getState();
         const { symbol1, symbol2 } = state;
-        const id = `${symbol1.name}:${symbol2.name}`;
-        this.socket.emit(ClientEvents.SET_TRADER, id, (res: { _id: string, levels: IOrderLevel[] }) => {
+        let { text, name, underlying, exchange, formatter } = symbol1;
+        const legs: IContract[] = [{ text, name, underlying, exchange, formatter }];
+        ({ text, name, underlying, exchange, formatter } = symbol2);
+        legs.push({ text, name, underlying, exchange, formatter });
+        this.socket.emit(ClientEvents.SET_TRADER, legs, (res: { _id: string, levels: IOrderLevel[] }) => {
             store.dispatch(addLogMessage({
                 type: LogTypes.Success,
                 time: Date.now(),

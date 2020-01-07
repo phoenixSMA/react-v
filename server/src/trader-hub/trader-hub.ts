@@ -1,7 +1,7 @@
 import { Trader, TraderModel } from "./trader/trader";
 import { Socket } from 'socket.io';
 import { DocumentType } from "@typegoose/typegoose";
-import { IOrderLevel } from "../../../src/store/types";
+import { IContract, IOrderLevel } from "../../../src/store/types";
 import { TraderStatus } from "../../../src/common/trader-status";
 
 export class TraderHub {
@@ -15,8 +15,8 @@ export class TraderHub {
             });
     }
 
-    createTrader(_id: string): Trader {
-        const trader = new Trader({ _id });
+    createTrader(legs: IContract[]): Trader {
+        const trader = new Trader({ legs });
         TraderModel.create(trader)
             .then((trd) => {
                 this.traders.push(trader);
@@ -50,11 +50,12 @@ export class TraderHub {
         }
     }
 
-    addClient(_id: string, socket: Socket): { _id: string; levels: IOrderLevel[]; status: TraderStatus } {
+    addClient(legs: IContract[], socket: Socket): { _id: string; levels: IOrderLevel[]; status: TraderStatus } {
         this.removeClient(socket);
+        const _id = `${legs[0].name}-${legs[0].name}`;
         let trader = this.traders.find(t => t._id === _id);
         if (!trader) {
-            trader = this.createTrader(_id);
+            trader = this.createTrader(legs);
         }
         trader.clients.push(socket);
         this.logTraders('addClient');
@@ -92,8 +93,8 @@ export class TraderHub {
     private static patchTraders(traders: DocumentType<Trader>[]): Trader[] {
         const patchedTraders: Trader[] = [];
         for (const trader of traders) {
-            const { _id, createdAt, autoTrade, levels, orders } = trader;
-            patchedTraders.push(new Trader({ _id, createdAt, autoTrade, levels, orders }));
+            const { legs, createdAt, autoTrade, levels, orders } = trader;
+            patchedTraders.push(new Trader({ legs, createdAt, autoTrade, levels, orders }));
         }
         return patchedTraders;
     }

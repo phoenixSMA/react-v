@@ -5,10 +5,13 @@ import { Order } from "./order";
 import { IOrderLevel } from "../../../../src/store/types";
 import { TraderStatus } from "../../../../src/common/trader-status";
 import { ServerEvents } from "../../../../src/common/socket-events";
+import { Contract } from "./contract";
 
 export class Trader {
     @prop()
     _id: string;
+    @arrayProp({ items: Contract })
+    legs: Contract[];
     @prop()
     createdAt: Date;
     @prop()
@@ -23,14 +26,15 @@ export class Trader {
     clients: Socket[];
 
     constructor(initials: {
-        _id: string,
+        legs: Contract[],
         createdAt?: Date,
         autoTrade?: boolean,
         levels?: Level[],
         orders?: Order[],
     }) {
-        const { _id, createdAt, autoTrade, levels, orders } = initials;
-        this._id = _id;
+        const { legs, createdAt, autoTrade, levels, orders } = initials;
+        this._id = `${legs[0].name}-${legs[1].name}`;
+        this.legs = legs;
         this.createdAt = createdAt || new Date();
         this.autoTrade = !!autoTrade;
         this.status = TraderStatus.Idle;

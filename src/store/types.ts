@@ -1,6 +1,7 @@
 import { ChartData } from "react-chartjs-2";
 import { ChartOptions } from "chart.js";
 import { TraderStatus } from "../common/trader-status";
+import { Exchange, Underlying } from "../service/constants";
 
 type Level2Row = [number, number];
 
@@ -15,8 +16,8 @@ export type BidAskData = { asks: Level2Data, bids: Level2Data };
 export interface IContract {
     text: string;
     name: string;
-    underlying: string;
-    exchange: string;
+    underlying: Underlying;
+    exchange: Exchange;
     formatter: number;
 }
 

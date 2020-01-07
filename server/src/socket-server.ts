@@ -33,9 +33,9 @@ export class SocketServer {
                 traderHub.removeClient(socket);
             });
 
-            socket.on(ClientEvents.SET_TRADER, (_id, fn) => {
-                console.log(`Client ${socket.id} requested trader "${_id}"`);
-                fn(traderHub.addClient(_id, socket));
+            socket.on(ClientEvents.SET_TRADER, (legs, fn) => {
+                console.log(`Client ${socket.id} requested trader "${legs[0].name}-${legs[0].name}"`);
+                fn(traderHub.addClient(legs, socket));
             });
 
             socket.on(ClientEvents.CHANGE_TRADER_STATUS, (fn) => {

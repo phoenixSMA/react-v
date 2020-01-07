@@ -1,6 +1,4 @@
-import { inflate } from "pako";
 import {
-    IWebsocket,
     RequestData,
     RequestParams,
     SubscribeParams,
@@ -11,19 +9,19 @@ import {
     WebsocketStatusHandler,
     WebsocketSubscribeHandler,
     WebsocketSubscription
-} from "./types";
-import { ChartPeriods } from "../../store/types";
+} from "../types";
+import { ChartPeriods } from "../../../store/types";
 
-export class HuobiWebsocket implements IWebsocket {
+export class HuobiWebsocketBase {
     private readonly _logging: boolean;
-    private ws: WebSocket | undefined;
-    private url = `wss://www.hbdm.com/ws`;
+    protected url = `wss://www.hbdm.com/ws`;
     public exchange = `HUOBI`;
+    protected ws: any;
     public status = WebsocketStatus.Closed;
-    private _statusHandler: WebsocketStatusHandler | null;
-    private readonly _subscriptions: Record<string, WebsocketSubscribeHandler[]>;
-    private readonly _requests: Record<string, WebsocketRequestHandler[]>;
-    private readonly _mapChartPeriods = {
+    protected _statusHandler: WebsocketStatusHandler | null;
+    protected readonly _subscriptions: Record<string, WebsocketSubscribeHandler[]>;
+    protected readonly _requests: Record<string, WebsocketRequestHandler[]>;
+    protected readonly _mapChartPeriods = {
         M1: `1min`,
         M5: `5min`,
         M15: `15min`,
@@ -38,66 +36,6 @@ export class HuobiWebsocket implements IWebsocket {
         this._statusHandler = null;
         this._subscriptions = {};
         this._requests = {};
-    }
-
-    public open(handler: WebsocketStatusHandler): void {
-        this._statusHandler = handler;
-        this.ws = new WebSocket(this.url);
-        this.ws.onopen = () => {
-            this._logger('[open] Connection opened');
-            this.status = WebsocketStatus.Opened;
-            this._statusHandler && this._statusHandler(this.exchange, this.status);
-        };
-        this.ws.onmessage = async (event) => {
-            this._logger(`[message] Data recieved: `, event.data);
-            const blobArrayBuffer = await event.data.arrayBuffer();
-            const msg = JSON.parse(inflate(blobArrayBuffer, { to: `string` }));
-            this._logger(`[pako] `, msg);
-            if (msg.ping) {
-                this.ws!.send(JSON.stringify({ pong: msg.ping }));
-            } else {
-                if (msg.ch && msg.tick) {
-                    const ch = msg.ch.split(`.`);
-                    let dataType: WebsocketSubscription;
-                    let data: SubsriptionData;
-                    if (ch[2] === `depth`) {
-                        dataType = WebsocketSubscription.MarketDepth;
-                        data = {
-                            asks: msg.tick.asks,
-                            bids: msg.tick.bids,
-                        };
-                    } else if (ch[2] === `kline`) {
-                        dataType = WebsocketSubscription.CloseLine;
-                        data = [msg.tick.id, msg.tick.close];
-                    }
-                    this._subscriptions[msg.ch] && this._subscriptions[msg.ch].forEach((handler) => {
-                        handler(this.exchange, ch[1], dataType, data)
-                    });
-                } else if (msg.rep && msg.data) {
-                    const rep = msg.rep.split(`.`);
-                    let dataType: WebsocketRequest;
-                    let data: RequestData = [];
-                    if (rep[2] === `kline`) {
-                        dataType = WebsocketRequest.CloseLine;
-                        msg.data.forEach((tick: { id: number; close: number; }) => data.push([tick.id, tick.close]));
-                    }
-                    this._requests[msg.rep] && this._requests[msg.rep].forEach((handler) => {
-                        handler(this.exchange, rep[1], dataType, data)
-                    })
-                }
-            }
-        };
-        this.ws.onclose = (event) => {
-            let error = false;
-            if (event.wasClean) {
-                this._logger(`[close] Connection closed clear, code=${event.code} reason=${event.reason}`);
-            } else {
-                this._logger(`[close] Disconnected`);
-                error = true;
-            }
-            this.status = WebsocketStatus.Closed;
-            this._statusHandler && this._statusHandler(this.exchange, this.status, error);
-        }
     }
 
     public close(): void {
@@ -170,7 +108,7 @@ export class HuobiWebsocket implements IWebsocket {
             }
             this._requests[requestMethod].push(handler);
             const end: number = Math.round(new Date().getTime() / 1000);
-            const beg: number = end - 2000 * HuobiWebsocket._calcStepInSeconds(period!);
+            const beg: number = end - 2000 * HuobiWebsocketBase._calcStepInSeconds(period!);
             this.ws!.send(JSON.stringify({
                 req: requestMethod,
                 id: `id888`,
@@ -180,16 +118,57 @@ export class HuobiWebsocket implements IWebsocket {
         }
     }
 
+    protected _messageHandler = (msg: any) => {
+        if (msg.ping) {
+            this.ws!.send(JSON.stringify({ pong: msg.ping }));
+        } else {
+            if (msg.ch && msg.tick) {
+                const ch = msg.ch.split(`.`);
+                let dataType: WebsocketSubscription;
+                let data: SubsriptionData;
+                if (ch[2] === `depth`) {
+                    dataType = WebsocketSubscription.MarketDepth;
+                    data = {
+                        asks: msg.tick.asks,
+                        bids: msg.tick.bids,
+                    };
+                } else if (ch[2] === `kline`) {
+                    dataType = WebsocketSubscription.CloseLine;
+                    data = [msg.tick.id, msg.tick.close];
+                }
+                this._subscriptions[msg.ch] && this._subscriptions[msg.ch].forEach((handler) => {
+                    handler(this.exchange, ch[1], dataType, data)
+                });
+            } else if (msg.rep && msg.data) {
+                const rep = msg.rep.split(`.`);
+                let dataType: WebsocketRequest;
+                let data: RequestData = [];
+                if (rep[2] === `kline`) {
+                    dataType = WebsocketRequest.CloseLine;
+                    msg.data.forEach((tick: { id: number; close: number; }) => data.push([tick.id, tick.close]));
+                }
+                this._requests[msg.rep] && this._requests[msg.rep].forEach((handler) => {
+                    handler(this.exchange, rep[1], dataType, data)
+                })
+            }
+        }
+    };
+
+    protected _openHandler = () => {
+        this._logger('[open] Connection opened');
+        this.status = WebsocketStatus.Opened;
+        this._statusHandler && this._statusHandler(this.exchange, this.status);
+    };
+
     private static _calcStepInSeconds(period: ChartPeriods) {
         let output: number = period.substr(0, 1) === `M` ? 60 : period.substr(0, 1) === `H` ? 60 * 60 : 60 * 60 * 24;
         output = output * (period.substr(1) as unknown as number);
         return output;
     }
 
-    private _logger(...args: any[]) {
+    protected _logger(...args: any[]) {
         if (this._logging) {
             console.log(...args);
         }
     }
-
 }

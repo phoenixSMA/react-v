@@ -8,7 +8,7 @@ import {
     updateSymbolCL,
     updateSymbolL2
 } from "../actions/actions";
-import {HuobiWebsocket} from "../../service/websockets/huobi";
+import {HuobiWebsocket} from "../../service/websockets/huobi/huobi";
 import {
     SubsriptionData,
     WebsocketRequest,
